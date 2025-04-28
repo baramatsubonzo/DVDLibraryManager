@@ -193,3 +193,38 @@ class Program
         Console.Write("Enter your choice ==> ");
     }
 }
+
+
+// MEMO: Operation test for Member class
+// TODO: Remove later
+// class Program
+// {
+//     static void Main(string[] args)
+//     {
+//         // === Beginning of test code === 
+//         Member member = new Member("John", "Doe", "0123456789", "1234");
+
+//         Console.WriteLine("Borrowing movies...");
+//         member.BorrowMovie("Inception");
+//         member.BorrowMovie("Interstellar");
+//         member.BorrowMovie("The Dark Knight");
+
+//         Console.WriteLine("\nCurrent Borrowed Movies:");
+//         foreach (string movie in member.GetCurrentBorrowedMovies())
+//         {
+//             Console.WriteLine(movie);
+//         }
+
+//         Console.WriteLine("\nReturning 'Interstellar'...");
+//         member.ReturnMovie("Interstellar");
+
+//         Console.WriteLine("\nCurrent Borrowed Movies After Return:");
+//         foreach (string movie in member.GetCurrentBorrowedMovies())
+//         {
+//             Console.WriteLine(movie);
+//         }
+
+//         Console.WriteLine("\nTest completed!");
+//         // === end of test code === 
+//     }
+// }
