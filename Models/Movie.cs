@@ -11,16 +11,20 @@ namespace DVDLibraryManager
 
         // For Admin
         public int AvailableCopies { get; set; }
-        public int TotalBorrowedCountCount { get; set; }
+        public int TotalBorrowedCount { get; set; }
 
-        public Movie(string title, string genre, string classification, int duration, int availableCopies)
+        public int TotalCopies { get; set; }
+
+
+        public Movie(string title, string genre, string classification, int duration, int availableCopies, int copies)
         {
             Title = title;
             Genre = genre;
             Classification = classification;
             Duration = duration;
             AvailableCopies = availableCopies;
-            TotalBorrowedCountCount = 0; // Initial value
+            TotalCopies = copies;
+            TotalBorrowedCount = 0; // Initial value
         }
 
         // Method to call when borrowed
@@ -33,7 +37,7 @@ namespace DVDLibraryManager
                 TotalBorrowedCount++;
                 return true;
             }
-            return false
+            return false;
         }
 
         // Method to call when returned
@@ -48,7 +52,7 @@ namespace DVDLibraryManager
 
         // Todo: Extend it when starting to create the staff menu
         // public AddCopies(int copies)
-        // puvlic RemoveCopies(int copies)
+        // public RemoveCopies(int copies)
 
         // Method to display information
         public override string ToString()
