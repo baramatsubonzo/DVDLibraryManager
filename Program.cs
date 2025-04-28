@@ -1,4 +1,5 @@
 ﻿using System;
+using DVDLibraryManager;
 
 class Program
 {
@@ -64,6 +65,22 @@ class Program
                 case "1":
                     Console.WriteLine("Add DVDs to system selected.");
                     // TODO: Add Feature
+                    // Later I will remove
+                    // === Beginning of test code === 
+                    // Movie testMovie = new Movie("Hoge", "SF", "M15+", 148, 3, 3);
+
+                    // Console.WriteLine("作ったばかりのMovie:");
+                    // Console.WriteLine(testMovie);
+
+                    // bool borrowResult = testMovie.Borrow();
+                    // Console.WriteLine("\nBorrowした後:");
+                    // Console.WriteLine(testMovie);
+                    // Console.WriteLine("Borrow成功した？ " + borrowResult);
+
+                    // testMovie.Return();
+                    // Console.WriteLine("\nReturnした後:");
+                    // Console.WriteLine(testMovie);
+                    // === End of test code === 
                     break;
                 case "2":
                     Console.WriteLine("Remove DVDs from system selected.");
