@@ -51,7 +51,11 @@ namespace DVDLibraryManager
         }
 
         // Todo: Extend it when starting to create the staff menu
-        // public AddCopies(int copies)
+        public void AddCopies(int copies)
+        {
+            AvailableCopies += copies;
+            TotalCopies += copies;
+        }
         // public RemoveCopies(int copies)
 
         // Method to display information

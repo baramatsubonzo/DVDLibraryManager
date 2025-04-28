@@ -13,48 +13,58 @@ namespace DVDLibraryManager
             movieCount = 0;
         }
 
-        // Add a movie, simply append to the end
-        public void AddMovie(Movie movie)
+        // TODO: Check later if this hash function matches the lecture
+        private int HashFunction(string title)
         {
-            if (movieCount >= movies.Length)
+            int hash = 0;
+            foreach (char c in title)
             {
-                Console.WriteLine("Movie collection is full");
-                return;
+                hash = (hash * 31 + c) % movies.Length;
             }
-
-            movies[movieCount] = movie;
-            movieCount++;
+            return hash;
         }
 
-        // Search for a movie by title
+        // Add a movie by Hash
+        public void AddMovie(Movie movie)
+        {
+            int slot = HashFunction(movie.Title);
+            if (movies[slot] == null)
+            {
+                movies[slot] = movie;
+                movieCount++;
+            }
+            else if (movies[slot].Title == movie.Title)
+            {
+                // If the title is the same, add the number of copies
+                movies[slot].AddCopies(movie.TotalCopies);
+            }
+            else
+            {
+                // Collision detected, but not handled yet
+                Console.WriteLine($"Collision detected for title: {movie.Title} (not handled yet)");
+            }
+        }
+
+        // Search for a movie by Hash
         public Movie FindMovie(string title)
         {
-            for (int i = 0; i < movieCount; i++)
+            int slot = HashFunction(title);
+            if (movies[slot] != null && movies[slot].Title == title)
             {
-                if (movies[i].Title.Equals(title, StringComparison.OrdinalIgnoreCase))
-                {
-                    return movies[i];
-                }
+                return movies[slot];
             }
             return null;
         }
 
-        // Delete a movie by title
+        // Delete a movie by Hash
         public bool RemoveMovie(string title)
         {
-            for (int i = 0; i < movieCount; i++)
+            int slot = HashFunction(title);
+            if (movies[slot] != null && movies[slot].Title == title)
             {
-                if (movies[i].Title.Equals(title, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Linear shift after deletion
-                    for (int j = i; j < movieCount - 1; j++)
-                    {
-                        movies[j] = movies[j + 1];
-                    }
-                    movies[movieCount - 1] = null;
-                    movieCount--;
-                    return true;
-                }
+                movies[slot] = null;
+                movieCount--;
+                return true;
             }
             return false;
         }
@@ -62,7 +72,8 @@ namespace DVDLibraryManager
         // Display the movie list for testing
         public void ListAllMovies()
         {
-            for (int i = 0; i < movieCount; i++)
+            for (int i = 0; i < movies.Length; i++)
+            if (movies[i] != null)
             {
                 Console.WriteLine(movies[i]);
             }
