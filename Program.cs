@@ -66,7 +66,7 @@ class Program
                     Console.WriteLine("Add DVDs to system selected.");
                     // TODO: Add Feature
                     // Later I will remove
-                    // === Beginning of test code === 
+                    // === Beginning of test code ===
                     // Movie testMovie = new Movie("Hoge", "SF", "M15+", 148, 3, 3);
 
                     // Console.WriteLine("作ったばかりのMovie:");
@@ -80,7 +80,7 @@ class Program
                     // testMovie.Return();
                     // Console.WriteLine("\nReturnした後:");
                     // Console.WriteLine(testMovie);
-                    // === End of test code === 
+                    // === End of test code ===
                     break;
                 case "2":
                     Console.WriteLine("Remove DVDs from system selected.");
@@ -201,7 +201,7 @@ class Program
 // {
 //     static void Main(string[] args)
 //     {
-//         // === Beginning of test code === 
+//         // === Beginning of test code ===
 //         Member member = new Member("John", "Doe", "0123456789", "1234");
 
 //         Console.WriteLine("Borrowing movies...");
@@ -225,6 +225,51 @@ class Program
 //         }
 
 //         Console.WriteLine("\nTest completed!");
-//         // === end of test code === 
+//         // === end of test code ===
+//     }
+// }
+
+// TODO: Remove later, just test for movie collection
+// class Program
+// {
+//     static void Main(string[] args)
+//     {
+//         MovieCollection movieCollection = new MovieCollection();
+
+//         // テスト用Movieを作る
+//         Movie movie1 = new Movie("Inception", "Sci-Fi", "M15+", 148, 5, 5);
+//         Movie movie2 = new Movie("Interstellar", "Sci-Fi", "M15+", 169, 3, 3);
+//         Movie movie3 = new Movie("The Dark Knight", "Action", "M15+", 152, 7, 7);
+
+//         // 追加テスト
+//         Console.WriteLine("=== Add Movie Test ===");
+//         movieCollection.AddMovie(movie1);
+//         movieCollection.AddMovie(movie2);
+//         movieCollection.AddMovie(movie3);
+
+//         Console.WriteLine("\n=== List All Movies ===");
+//         movieCollection.ListAllMovies();
+
+//         // 検索テスト
+//         Console.WriteLine("\n=== Find Movie Test ===");
+//         var foundMovie = movieCollection.FindMovie("Interstellar");
+//         if (foundMovie != null)
+//         {
+//             Console.WriteLine("Found: " + foundMovie);
+//         }
+//         else
+//         {
+//             Console.WriteLine("Movie not found.");
+//         }
+
+//         // 削除テスト
+//         Console.WriteLine("\n=== Remove Movie Test ===");
+//         bool removed = movieCollection.RemoveMovie("Inception");
+//         Console.WriteLine("Removed Inception? " + (removed ? "Yes" : "No"));
+
+//         Console.WriteLine("\n=== List All Movies After Removal ===");
+//         movieCollection.ListAllMovies();
+
+//         Console.WriteLine("\nTest Completed!");
 //     }
 // }
