@@ -96,9 +96,9 @@ class Program
                     Console.Write("Enter movie title to remove: ");
                     string titleToRemove = Console.ReadLine();
 
-                    bool removed = movieCollection.RemoveMovie(titleToRemove);
+                    bool isMovieRemoved = movieCollection.RemoveMovie(titleToRemove);
 
-                    if (removed)
+                    if (isMovieRemoved)
                     {
                         Console.WriteLine("Movie removed successfully!");
                     }
@@ -139,9 +139,45 @@ class Program
                     break;
                 case "4":
                     Console.WriteLine("Remove a registered member selected.");
+                    Console.Write("Enter member's first name: ");
+                    string removeFirstName = Console.ReadLine();
+
+                    Console.Write("Enter member's last name: ");
+                    string removeLastName = Console.ReadLine();
+
+                    bool isMemberRemoved = memberCollection.RemoveMember(removeFirstName, removeLastName);
+
+                    if (isMemberRemoved)
+                    {
+                        Console.WriteLine("Member removed successfully!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to remove member. They may not exist or are still borrowing DVDs.");
+                    }
+                    // Show the member
+                    // TODO: Later separate logic and display.
+                    memberCollection.ListAllMembers();
                     break;
                 case "5":
                     Console.WriteLine("Find a member contact phone number selected.");
+                    Console.Write("Enter first name: ");
+                    string searchFirstName = Console.ReadLine();
+
+                    Console.Write("Enter last name: ");
+                    string searchLastName = Console.ReadLine();
+
+                    Member foundMember = memberCollection.FindMember(searchFirstName, searchLastName);
+
+                    if (foundMember != null)
+                    {
+                        Console.WriteLine($"Phone number for {searchFirstName} {searchLastName}: {foundMember.PhoneNumber}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Member not found.");
+                    }
+
                     break;
                 case "6":
                     Console.WriteLine("Find members currently renting a movie selected.");
