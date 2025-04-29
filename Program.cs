@@ -89,7 +89,7 @@ class Program
 
                     Console.WriteLine("Movie added successfully!");
                     Console.WriteLine("=== Current Movies in Collection ===");
-                    movieCollection.ListAllMovies();
+                    movieCollection.GetAllMovies();
                     break;
                 case "2":
                     Console.WriteLine("Remove DVDs from system selected.");
@@ -229,6 +229,12 @@ class Program
             {
                 case "1":
                     Console.WriteLine("Browse all the movies selected.");
+                    Console.WriteLine("=== Movie List ===");
+                    Movie[] allMovies = movieCollection.GetAllMovies();
+                    foreach (var movie in allMovies)
+                    {
+                        Console.WriteLine(movie);
+                    }
                     break;
                 case "2":
                     Console.WriteLine("Display information about a movie selected.");

@@ -90,14 +90,35 @@ namespace DVDLibraryManager
             return false;
         }
 
-        // Display the movie list for testing
-        public void ListAllMovies()
+        // Returns all movies stored in the collection, alphabetically by title.
+        public Movie[] GetAllMovies()
         {
+            int count = 0;
+
+            // Count movies in the array without null
             for (int i = 0; i < movies.Length; i++)
-            if (movies[i] != null)
             {
-                Console.WriteLine(movies[i]);
+                if (movies[i] != null)
+                {
+                    count++;
+                }
             }
+
+            // Copy valid movies into new array
+            Movie[] result = new Movie[count];
+            int index = 0;
+            for (int i = 0; i < movies.Length; i++)
+            {
+                if (movies[i] != null)
+                {
+                    result[index++] = movies[i];
+                }
+            }
+
+            // Sort result alphabetically
+            Array.Sort(result, (a, b) => a.Title.CompareTo(b.Title));
+
+            return result;
         }
     }
 }
