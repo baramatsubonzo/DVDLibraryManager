@@ -24,10 +24,34 @@ namespace DVDLibraryManager
             return hash;
         }
 
+        // Find an available slot with linear probing
+        private int FindSlot(string title)
+        {
+            int hash = HashFunction(title);
+            int originalHash = hash;
+
+            while (movies[hash] != null && movies[hash].Title != title)
+            {
+                hash = (hash + 1) % movies.Length;
+                if (hash == originalHash)
+                {
+                    // If no available slot is found (hash table is full)
+                    return -1;
+                }
+            }
+            return hash;
+        }
+
         // Add a movie by Hash
         public void AddMovie(Movie movie)
         {
-            int slot = HashFunction(movie.Title);
+            int slot = FindSlot(movie.Title);
+            if (slot == -1)
+            {
+                Console.WriteLine("Movie collection is full!");
+                return;
+            }
+
             if (movies[slot] == null)
             {
                 movies[slot] = movie;
@@ -48,8 +72,9 @@ namespace DVDLibraryManager
         // Search for a movie by Hash
         public Movie FindMovie(string title)
         {
-            int slot = HashFunction(title);
-            if (movies[slot] != null && movies[slot].Title == title)
+            int slot = FindSlot(title);
+            // Check if an available slot was found by `slot !=1`
+            if (slot !=1 && movies[slot] != null && movies[slot].Title == title)
             {
                 return movies[slot];
             }
@@ -59,8 +84,9 @@ namespace DVDLibraryManager
         // Delete a movie by Hash
         public bool RemoveMovie(string title)
         {
-            int slot = HashFunction(title);
-            if (movies[slot] != null && movies[slot].Title == title)
+            int slot = FindSlot(title);
+            // Check if an available slot was found by `slot !=1`
+            if (slot !=-1 && movies[slot] != null && movies[slot].Title == title)
             {
                 movies[slot] = null;
                 movieCount--;
