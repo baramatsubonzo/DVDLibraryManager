@@ -109,6 +109,33 @@ class Program
                     break;
                 case "3":
                     Console.WriteLine("Register a new member selected.");
+
+                    Console.Write("Enter first name: ");
+                    string firstName = Console.ReadLine();
+
+                    Console.Write("Enter last name: ");
+                    string lastName = Console.ReadLine();
+
+                    Console.Write("Enter phone number: ");
+                    string phoneNumber = Console.ReadLine();
+
+                    Console.Write("Set password: ");
+                    string password = Console.ReadLine();
+
+                    Member newMember = new Member(firstName, lastName, phoneNumber, password);
+                    bool added = memberCollection.AddMember(newMember);
+
+                    if (added)
+                    {
+                        Console.WriteLine("Member registered successfully!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Member already exists or collection is full.");
+                    }
+                    // Show the member
+                    // TODO: Later separate logic and display.
+                    memberCollection.ListAllMembers();
                     break;
                 case "4":
                     Console.WriteLine("Remove a registered member selected.");

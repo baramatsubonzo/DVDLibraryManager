@@ -44,14 +44,17 @@ namespace DVDLibraryManager
             return hash;
         }
 
-        public void AddMember(Member member)
+        public bool AddMember(Member member)
         {
+            if (memberCount >= members.Length)
+            {
+                return false;
+            }
+
             int slot = FindSlot(member.FirstName, member.LastName);
             if (slot == -1)
             {
-                // If the slot is -1, array is full
-                Console.WriteLine("Member collection is full");
-                return;
+                return false;
             }
 
             if (members[slot] == null)
@@ -59,11 +62,12 @@ namespace DVDLibraryManager
                 // If the slot is empty, register the new member there
                 members[slot] = member;
                 memberCount++;
+                return true;
             }
             else
             {
-                // If Member with the same name already exists, show warning
-                Console.WriteLine($"Member {member.FirstName} {member.LastName} already exists!");
+                // If Member with the same name already exists, return false
+                return false;
             }
         }
 
