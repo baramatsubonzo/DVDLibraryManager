@@ -195,39 +195,39 @@ class Program
 }
 
 
-// MEMO: Operation test for Member class
-// TODO: Remove later
-// class Program
-// {
-//     static void Main(string[] args)
-//     {
-//         // === Beginning of test code ===
-//         Member member = new Member("John", "Doe", "0123456789", "1234");
+// // MEMO: Operation test for Member class
+// // TODO: Remove later
+// // class Program
+// // {
+// //     static void Main(string[] args)
+// //     {
+// //         // === Beginning of test code ===
+// //         Member member = new Member("John", "Doe", "0123456789", "1234");
 
-//         Console.WriteLine("Borrowing movies...");
-//         member.BorrowMovie("Inception");
-//         member.BorrowMovie("Interstellar");
-//         member.BorrowMovie("The Dark Knight");
+// //         Console.WriteLine("Borrowing movies...");
+// //         member.BorrowMovie("Inception");
+// //         member.BorrowMovie("Interstellar");
+// //         member.BorrowMovie("The Dark Knight");
 
-//         Console.WriteLine("\nCurrent Borrowed Movies:");
-//         foreach (string movie in member.GetCurrentBorrowedMovies())
-//         {
-//             Console.WriteLine(movie);
-//         }
+// //         Console.WriteLine("\nCurrent Borrowed Movies:");
+// //         foreach (string movie in member.GetCurrentBorrowedMovies())
+// //         {
+// //             Console.WriteLine(movie);
+// //         }
 
-//         Console.WriteLine("\nReturning 'Interstellar'...");
-//         member.ReturnMovie("Interstellar");
+// //         Console.WriteLine("\nReturning 'Interstellar'...");
+// //         member.ReturnMovie("Interstellar");
 
-//         Console.WriteLine("\nCurrent Borrowed Movies After Return:");
-//         foreach (string movie in member.GetCurrentBorrowedMovies())
-//         {
-//             Console.WriteLine(movie);
-//         }
+// //         Console.WriteLine("\nCurrent Borrowed Movies After Return:");
+// //         foreach (string movie in member.GetCurrentBorrowedMovies())
+// //         {
+// //             Console.WriteLine(movie);
+// //         }
 
-//         Console.WriteLine("\nTest completed!");
-//         // === end of test code ===
-//     }
-// }
+// //         Console.WriteLine("\nTest completed!");
+// //         // === end of test code ===
+// //     }
+// // }
 
 // TODO: Remove later, just test for movie collection
 // class Program
@@ -271,5 +271,45 @@ class Program
 //         movieCollection.ListAllMovies();
 
 //         Console.WriteLine("\nTest Completed!");
+//     }
+// }
+
+
+// TODO: Remove later, just test for member collection
+// class Program
+// {
+//     static void Main(string[] args)
+//     {
+//         // テスト用MemberCollection作成
+//         MemberCollection memberCollection = new MemberCollection();
+
+//         Console.WriteLine("=== Add Members ===");
+//         memberCollection.AddMember(new Member("John", "Smith", "12345678", "password1"));
+//         memberCollection.AddMember(new Member("Jane", "Doe", "87654321", "password2"));
+//         Console.WriteLine("Added John Smith and Jane Doe!");
+
+//         Console.WriteLine("\n=== Find Member ===");
+//         Member found = memberCollection.FindMember("John", "Smith");
+//         if (found != null)
+//         {
+//             Console.WriteLine($"Found: {found.FirstName} {found.LastName}");
+//         }
+//         else
+//         {
+//             Console.WriteLine("John Smith not found!");
+//         }
+
+//         Console.WriteLine("\n=== Remove Member ===");
+//         bool removed = memberCollection.RemoveMember("John", "Smith");
+//         Console.WriteLine($"Removed John Smith? {(removed ? "Yes" : "No")}");
+
+//         Console.WriteLine("\n=== Try to Find Again ===");
+//         found = memberCollection.FindMember("John", "Smith");
+//         Console.WriteLine(found == null ? "John Smith not found (as expected)" : "Still found!");
+
+//         Console.WriteLine("\n=== List All Members ===");
+//         memberCollection.ListAllMembers();
+
+//         Console.WriteLine("\n=== Test Completed! ===");
 //     }
 // }
