@@ -66,6 +66,41 @@ namespace DVDLibraryManager
                 Console.WriteLine($"Member {member.FirstName} {member.LastName} already exists!");
             }
         }
+
+        // Need to return the actual Member data
+        public Member FindMember(string firstName, string lastName)
+        {
+            int slot = FindSlot(firstName, lastName);
+            if (slot != -1 && members[slot] != null)
+            {
+                return members[slot];
+            }
+            return null;
+        }
+
+        //Only need to know if the deletion succeeded, so use Bool
+        public bool RemoveMember(string firstName, string lastName)
+        {
+            int slot = FindSlot(firstName, lastName);
+            if (slot != -1 && members[slot] != null)
+            {
+                members[slot] = null;
+                memberCount--;
+                return true;
+            }
+            return false;
+        }
+
+        public void ListAllMembers()
+        {
+            for (int i = 0; i < members.Length; i++)
+            {
+                if (members[i] != null)
+                {
+                    Console.WriteLine(members[i]);
+                }
+            }
+        }
     }
 
 }
