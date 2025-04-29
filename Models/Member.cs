@@ -75,6 +75,11 @@ namespace DVDLibraryManager
             return currentBorrowed;
         }
 
+        public bool HasBorrowedMovies()
+        {
+            return borrowedCount > 0;
+        }
+
         // Display member information
         public override string ToString()
         {

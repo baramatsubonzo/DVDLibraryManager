@@ -88,6 +88,12 @@ namespace DVDLibraryManager
             int slot = FindSlot(firstName, lastName);
             if (slot != -1 && members[slot] != null)
             {
+                // Deletion not allowed if the member has borrowed movies
+                if (members[slot].HasBorrowedMovies())
+                {
+                    Console.WriteLine("This member cannot be removed because they are currently borrowing movies.");
+                    return false;
+                }
                 members[slot] = null;
                 memberCount--;
                 return true;
