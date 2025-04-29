@@ -3,6 +3,9 @@ using DVDLibraryManager;
 
 class Program
 {
+    static MovieCollection movieCollection = new MovieCollection();
+    static MemberCollection memberCollection = new MemberCollection();
+
     static void Main(string[] args)
     {
         bool exit = false;
@@ -64,26 +67,45 @@ class Program
             {
                 case "1":
                     Console.WriteLine("Add DVDs to system selected.");
-                    // TODO: Add Feature
-                    // Later I will remove
-                    // === Beginning of test code ===
-                    // Movie testMovie = new Movie("Hoge", "SF", "M15+", 148, 3, 3);
 
-                    // Console.WriteLine("作ったばかりのMovie:");
-                    // Console.WriteLine(testMovie);
+                    Console.WriteLine("Enter movie title: ");
+                    string title = Console.ReadLine();
 
-                    // bool borrowResult = testMovie.Borrow();
-                    // Console.WriteLine("\nBorrowした後:");
-                    // Console.WriteLine(testMovie);
-                    // Console.WriteLine("Borrow成功した？ " + borrowResult);
+                    Console.WriteLine("Enter genre: ");
+                    string genre = Console.ReadLine();
 
-                    // testMovie.Return();
-                    // Console.WriteLine("\nReturnした後:");
-                    // Console.WriteLine(testMovie);
-                    // === End of test code ===
+                    Console.Write("Enter classification (G, PG, M15+, MA15+): ");
+                    string classification = Console.ReadLine();
+
+                    Console.Write("Enter duration (in minutes): ");
+                    int duration = int.Parse(Console.ReadLine());
+
+                    Console.Write("Enter number of copies: ");
+                    int total_copies = int.Parse(Console.ReadLine());
+                    int available_copies = total_copies;
+
+                    Movie newMovie = new Movie(title, genre, classification, duration, available_copies, total_copies);
+                    movieCollection.AddMovie(newMovie);
+
+                    Console.WriteLine("Movie added successfully!");
+                    Console.WriteLine("=== Current Movies in Collection ===");
+                    movieCollection.ListAllMovies();
                     break;
                 case "2":
                     Console.WriteLine("Remove DVDs from system selected.");
+                    Console.Write("Enter movie title to remove: ");
+                    string titleToRemove = Console.ReadLine();
+
+                    bool removed = movieCollection.RemoveMovie(titleToRemove);
+
+                    if (removed)
+                    {
+                        Console.WriteLine("Movie removed successfully!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Movie not found or could not be removed.");
+                    }
                     break;
                 case "3":
                     Console.WriteLine("Register a new member selected.");
