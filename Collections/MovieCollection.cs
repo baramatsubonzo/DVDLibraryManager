@@ -57,15 +57,10 @@ namespace DVDLibraryManager
                 movies[slot] = movie;
                 movieCount++;
             }
-            else if (movies[slot].Title == movie.Title)
+            else
             {
                 // If the title is the same, add the number of copies
                 movies[slot].AddCopies(movie.TotalCopies);
-            }
-            else
-            {
-                // Collision detected, but not handled yet
-                Console.WriteLine($"Collision detected for title: {movie.Title} (not handled yet)");
             }
         }
 
@@ -73,8 +68,8 @@ namespace DVDLibraryManager
         public Movie FindMovie(string title)
         {
             int slot = FindSlot(title);
-            // Check if an available slot was found by `slot !=1`
-            if (slot !=1 && movies[slot] != null && movies[slot].Title == title)
+            // Check if an available slot was found by `slot !=-1`
+            if (slot != -1 && movies[slot] != null && movies[slot].Title == title)
             {
                 return movies[slot];
             }
