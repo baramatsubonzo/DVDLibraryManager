@@ -8,6 +8,9 @@ class Program
 
     static void Main(string[] args)
     {
+        // TODO: Remove later
+        InitializeTestData(); // Test data for development
+
         bool exit = false;
         while (!exit)
         {
@@ -89,7 +92,7 @@ class Program
 
                     Console.WriteLine("Movie added successfully!");
                     Console.WriteLine("=== Current Movies in Collection ===");
-                    movieCollection.ListAllMovies();
+                    movieCollection.GetAllMovies();
                     break;
                 case "2":
                     Console.WriteLine("Remove DVDs from system selected.");
@@ -229,16 +232,118 @@ class Program
             {
                 case "1":
                     Console.WriteLine("Browse all the movies selected.");
+                    Console.WriteLine("=== Movie List ===");
+                    Movie[] allMovies = movieCollection.GetAllMovies();
+                    foreach (var movieItem in allMovies)
+                    {
+                        Console.WriteLine(movieItem);
+                    }
                     break;
                 case "2":
                     Console.WriteLine("Display information about a movie selected.");
+                    Console.Write("Enter movie title: ");
+                    string searchTitle = Console.ReadLine();
+
+                    Movie foundMovie = movieCollection.FindMovie(searchTitle);
+                    if (foundMovie != null)
+                    {
+                        Console.WriteLine("=== Movie Information ===");
+                        Console.WriteLine(foundMovie);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Movie not found.");
+                    }
+
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
                     break;
                 case "3":
                     Console.WriteLine("Borrow a movie DVD selected.");
+
+                    // Confirm whether member or not
+                    Console.Write("Enter your first name: ");
+                    string firstName = Console.ReadLine();
+                    Console.Write("Enter your last name: ");
+                    string lastName = Console.ReadLine();
+
+                    Member member = memberCollection.FindMember(firstName, lastName);
+                    if (member == null)
+                    {
+                        Console.WriteLine("Member not found.");
+                        break;
+                    }
+
+                    // Confirm the movie
+                    Console.Write("Enter movie title to borrow: ");
+                    string movieTitle = Console.ReadLine();
+
+                    Movie movie = movieCollection.FindMovie(movieTitle);
+                    if (movie == null)
+                    {
+                        Console.WriteLine("Movie not found.");
+                        break;
+                    }
+
+                    // Add movie borrowing feature with validations
+                    if (!movie.Borrow())
+                    {
+                        Console.WriteLine("This movie is currently unavailable.");
+                    }
+                    else if (!member.BorrowMovie(movieTitle))
+                    {
+                        Console.WriteLine("You have reached your borrowing limit or already borrowed this movie.");
+                        // restore stock
+                        movie.Return();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Successfully borrowed: {movie.Title}");
+                    }
+
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+
                     break;
                 case "4":
                     Console.WriteLine("Return a movie DVD selected.");
+                    Console.Write("Enter your first name: ");
+                    string returnFirstName = Console.ReadLine();
+                    Console.Write("Enter your last name: ");
+                    string returnLastName = Console.ReadLine();
+
+                    Member returnMember = memberCollection.FindMember(returnFirstName, returnLastName);
+                    if (returnMember == null)
+                    {
+                        Console.WriteLine("Member not found.");
+                        break;
+                    }
+
+                    Console.Write("Enter movie title to return: ");
+                    string returnMovieTitle = Console.ReadLine();
+
+                    if (!returnMember.ReturnMovie(returnMovieTitle))
+                    {
+                        Console.WriteLine("You have not borrowed this movie.");
+                    }
+                    else
+                    {
+                        Movie returnMovie = movieCollection.FindMovie(returnMovieTitle);
+                        if (returnMovie != null)
+                        {
+                            returnMovie.Return();
+                            Console.WriteLine($"You have successfully returned: {returnMovie.Title}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Movie not found in collection.");
+                        }
+                    }
+
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
                     break;
+
                 case "5":
                     Console.WriteLine("List current borrowing movies selected.");
                     break;
@@ -277,124 +382,17 @@ class Program
         Console.WriteLine();
         Console.Write("Enter your choice ==> ");
     }
+
+    // TODO: Remove later
+    static void InitializeTestData()
+    {
+        // 映画登録
+        movieCollection.AddMovie(new Movie("Titanic", "Romance", "M15+", 60, 5, 5));
+        movieCollection.AddMovie(new Movie("Inception", "Sci-Fi", "M15+", 90, 3, 3));
+
+        // 会員登録
+        memberCollection.AddMember(new Member("Test", "User1", "000111222", "password"));
+        memberCollection.AddMember(new Member("Test", "User2", "000111333", "password"));
+    }
+
 }
-
-
-// // MEMO: Operation test for Member class
-// // TODO: Remove later
-// // class Program
-// // {
-// //     static void Main(string[] args)
-// //     {
-// //         // === Beginning of test code ===
-// //         Member member = new Member("John", "Doe", "0123456789", "1234");
-
-// //         Console.WriteLine("Borrowing movies...");
-// //         member.BorrowMovie("Inception");
-// //         member.BorrowMovie("Interstellar");
-// //         member.BorrowMovie("The Dark Knight");
-
-// //         Console.WriteLine("\nCurrent Borrowed Movies:");
-// //         foreach (string movie in member.GetCurrentBorrowedMovies())
-// //         {
-// //             Console.WriteLine(movie);
-// //         }
-
-// //         Console.WriteLine("\nReturning 'Interstellar'...");
-// //         member.ReturnMovie("Interstellar");
-
-// //         Console.WriteLine("\nCurrent Borrowed Movies After Return:");
-// //         foreach (string movie in member.GetCurrentBorrowedMovies())
-// //         {
-// //             Console.WriteLine(movie);
-// //         }
-
-// //         Console.WriteLine("\nTest completed!");
-// //         // === end of test code ===
-// //     }
-// // }
-
-// TODO: Remove later, just test for movie collection
-// class Program
-// {
-//     static void Main(string[] args)
-//     {
-//         MovieCollection movieCollection = new MovieCollection();
-
-//         // テスト用Movieを作る
-//         Movie movie1 = new Movie("Inception", "Sci-Fi", "M15+", 148, 5, 5);
-//         Movie movie2 = new Movie("Interstellar", "Sci-Fi", "M15+", 169, 3, 3);
-//         Movie movie3 = new Movie("The Dark Knight", "Action", "M15+", 152, 7, 7);
-
-//         // 追加テスト
-//         Console.WriteLine("=== Add Movie Test ===");
-//         movieCollection.AddMovie(movie1);
-//         movieCollection.AddMovie(movie2);
-//         movieCollection.AddMovie(movie3);
-
-//         Console.WriteLine("\n=== List All Movies ===");
-//         movieCollection.ListAllMovies();
-
-//         // 検索テスト
-//         Console.WriteLine("\n=== Find Movie Test ===");
-//         var foundMovie = movieCollection.FindMovie("Interstellar");
-//         if (foundMovie != null)
-//         {
-//             Console.WriteLine("Found: " + foundMovie);
-//         }
-//         else
-//         {
-//             Console.WriteLine("Movie not found.");
-//         }
-
-//         // 削除テスト
-//         Console.WriteLine("\n=== Remove Movie Test ===");
-//         bool removed = movieCollection.RemoveMovie("Inception");
-//         Console.WriteLine("Removed Inception? " + (removed ? "Yes" : "No"));
-
-//         Console.WriteLine("\n=== List All Movies After Removal ===");
-//         movieCollection.ListAllMovies();
-
-//         Console.WriteLine("\nTest Completed!");
-//     }
-// }
-
-
-// TODO: Remove later, just test for member collection
-// class Program
-// {
-//     static void Main(string[] args)
-//     {
-//         // テスト用MemberCollection作成
-//         MemberCollection memberCollection = new MemberCollection();
-
-//         Console.WriteLine("=== Add Members ===");
-//         memberCollection.AddMember(new Member("John", "Smith", "12345678", "password1"));
-//         memberCollection.AddMember(new Member("Jane", "Doe", "87654321", "password2"));
-//         Console.WriteLine("Added John Smith and Jane Doe!");
-
-//         Console.WriteLine("\n=== Find Member ===");
-//         Member found = memberCollection.FindMember("John", "Smith");
-//         if (found != null)
-//         {
-//             Console.WriteLine($"Found: {found.FirstName} {found.LastName}");
-//         }
-//         else
-//         {
-//             Console.WriteLine("John Smith not found!");
-//         }
-
-//         Console.WriteLine("\n=== Remove Member ===");
-//         bool removed = memberCollection.RemoveMember("John", "Smith");
-//         Console.WriteLine($"Removed John Smith? {(removed ? "Yes" : "No")}");
-
-//         Console.WriteLine("\n=== Try to Find Again ===");
-//         found = memberCollection.FindMember("John", "Smith");
-//         Console.WriteLine(found == null ? "John Smith not found (as expected)" : "Still found!");
-
-//         Console.WriteLine("\n=== List All Members ===");
-//         memberCollection.ListAllMembers();
-
-//         Console.WriteLine("\n=== Test Completed! ===");
-//     }
-// }
