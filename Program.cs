@@ -200,9 +200,6 @@ class Program
                             Console.WriteLine($"Name: {member.FirstName} {member.LastName}, Phone: {member.PhoneNumber}");
                         }
                     }
-                    Console.WriteLine("Press Enter to continue...");
-                    Console.ReadLine();
-
                     break;
                 case "0":
                     backToMain = true;
@@ -274,8 +271,6 @@ class Program
                         Console.WriteLine("Movie not found.");
                     }
 
-                    Console.WriteLine("Press Enter to continue...");
-                    Console.ReadLine();
                     break;
                 case "3":
                     Console.WriteLine("Borrow a movie DVD selected.");
@@ -320,9 +315,6 @@ class Program
                         Console.WriteLine($"Successfully borrowed: {movie.Title}");
                     }
 
-                    Console.WriteLine("Press Enter to continue...");
-                    Console.ReadLine();
-
                     break;
                 case "4":
                     Console.WriteLine("Return a movie DVD selected.");
@@ -359,8 +351,6 @@ class Program
                         }
                     }
 
-                    Console.WriteLine("Press Enter to continue...");
-                    Console.ReadLine();
                     break;
 
                 case "5":
@@ -395,9 +385,6 @@ class Program
                     {
                         Console.WriteLine("Member not found.");
                     }
-
-                    Console.WriteLine("Press Enter to continue...");
-                    Console.ReadLine();
 
                     break;
                 case "6":
