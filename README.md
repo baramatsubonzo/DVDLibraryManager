@@ -1,3 +1,21 @@
+## Repository Structure
+- **Models**
+  Core data structures (entities) used across the system.
+  - `Movie`: Represents a DVD movie.
+  - `Member`: Represents a library member.
+
+- **Collections**
+  Custom structures for managing `Movie` and `Member` entities.
+
+- **Handlers**
+  Contains logic for staff and member actions.
+  - `StaffHandler`: Add/remove movies, register/remove members, etc.
+  - `MemberHandler`: Browse/borrow/return movies, view top 3 rentals.
+
+- **Views**
+  Handles all console display (menus).
+
+
 ## Development and Contribution Rules
 
 - **Direct pushes to the `main` branch are prohibited.**
