@@ -38,7 +38,6 @@ namespace DVDLibraryManager
                     case "4":
                         HandleReturnMovie();
                         break;
-
                     case "5":
                         HandleListBorrowedMoviews();
                         break;
