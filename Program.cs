@@ -346,6 +346,40 @@ class Program
 
                 case "5":
                     Console.WriteLine("List current borrowing movies selected.");
+                    Console.WriteLine("=== List Your Borrowed Movies ===");
+
+                    Console.Write("Enter your first name: ");
+                    string memberFirstName = Console.ReadLine();
+                    Console.Write("Enter your last name: ");
+                    string memberLastName = Console.ReadLine();
+
+                    Member currentMember = memberCollection.FindMember(memberFirstName, memberLastName);
+
+                    if (currentMember != null)
+                    {
+                        string[] borrowed = currentMember.GetCurrentBorrowedMovies();
+
+                        if (borrowed.Length == 0)
+                        {
+                            Console.WriteLine("You are not currently borrowing any movies.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Your borrowed movies:");
+                            foreach (var title in borrowed)
+                            {
+                                Console.WriteLine($"- {title}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Member not found.");
+                    }
+
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+
                     break;
                 case "6":
                     Console.WriteLine("Display the top 3 movies rented by members selected.");
