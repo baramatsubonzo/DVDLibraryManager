@@ -184,6 +184,25 @@ class Program
                     break;
                 case "6":
                     Console.WriteLine("Find members currently renting a movie selected.");
+                    Console.Write("Enter movie title to search: ");
+                    string searchTitle = Console.ReadLine();
+                    Member[] borrowingMembers = memberCollection.GetMembersWithMovie(searchTitle);
+
+                    Console.WriteLine($"\n=== Members Borrowing '{searchTitle}' ===");
+                    if (borrowingMembers.Length == 0)
+                    {
+                        Console.WriteLine("No members are currently borrowing this movie.");
+                    }
+                    else
+                    {
+                        foreach (var member in borrowingMembers)
+                        {
+                            Console.WriteLine($"Name: {member.FirstName} {member.LastName}, Phone: {member.PhoneNumber}");
+                        }
+                    }
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+
                     break;
                 case "0":
                     backToMain = true;

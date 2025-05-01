@@ -101,6 +101,31 @@ namespace DVDLibraryManager
             return false;
         }
 
+        public Member[] GetMembersWithMovie(string movieTitle)
+        {
+            int count = 0;
+            // 1. Count matching members
+            for (int i = 0; i < members.Length; i++)
+            {
+                if (members[i] != null && Array.Exists(members[i].GetCurrentBorrowedMovies(), title => title == movieTitle))
+                {
+                    count++;
+                }
+            }
+            // 2. Collect matching members
+            Member[] result = new Member[count];
+            int index = 0;
+            for (int i = 0; i < members.Length; i++)
+            {
+                if (members[i] != null && Array.Exists(members[i].GetCurrentBorrowedMovies(), title => title == movieTitle))
+                {
+                    result[index++] = members[i];
+                }
+            }
+
+            return result;
+        }
+
         public void ListAllMembers()
         {
             for (int i = 0; i < members.Length; i++)
