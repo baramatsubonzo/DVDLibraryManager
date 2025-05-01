@@ -15,7 +15,7 @@ class Program
         while (!exit)
         {
             Console.Clear();
-            ShowMainMenu();
+            MainMenuView.Show();
 
             string choice = Console.ReadLine();
             Console.WriteLine();
@@ -37,23 +37,6 @@ class Program
                     break;
             }
         }
-    }
-
-    static void ShowMainMenu()
-    {
-        Console.WriteLine("==============================================");
-        Console.WriteLine("COMMUNITY LIBRARY MOVIE DVD MANAGEMENT SYSTEM");
-        Console.WriteLine("==============================================");
-        Console.WriteLine();
-        Console.WriteLine("Main Menu");
-        Console.WriteLine("----------------------------------------------");
-        Console.WriteLine("Select from the following:");
-        Console.WriteLine();
-        Console.WriteLine("1. Staff");
-        Console.WriteLine("2. Member");
-        Console.WriteLine("0. End the program");
-        Console.WriteLine();
-        Console.Write("Enter your choice ==> ");
     }
 
     static void ShowStaffMenuLoop()
