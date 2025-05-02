@@ -63,8 +63,7 @@ namespace DVDLibraryManager
         {
             Console.WriteLine("Add DVDs to system selected.");
 
-            Console.WriteLine("Enter movie title: ");
-            string title = Console.ReadLine();
+            string title = EnterMovieTitle();
 
             Genre genre = SelectGenre();
 
@@ -201,6 +200,22 @@ namespace DVDLibraryManager
             }
           }
         }
+
+        private string EnterMovieTitle()
+        {
+            Console.WriteLine("Enter movie title: ");
+            string title = Console.ReadLine()?.Trim();
+
+            while (title == null || title == "")
+            {
+                Console.WriteLine("Title cannot be empty. Please enter a valid title.");
+                Console.Write("Enter movie title: ");
+                title = Console.ReadLine()?.Trim();
+            }
+
+            return title;
+        }
+        
         private Genre SelectGenre()
         {
             bool firstAttempt = true; // Display the full genre list only on the first attempt
