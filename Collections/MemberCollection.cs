@@ -82,6 +82,21 @@ namespace DVDLibraryManager
             return null;
         }
 
+        // For login method
+        public Member FindMemberByPassword(string firstName, string lastName, string password)
+        {
+            int slot = FindSlot(firstName, lastName);
+            if (slot != -1 && members[slot] != null)
+            {
+                Member member = members[slot];
+                if (member.Password == password)
+                {
+                    return member;
+                }
+            }
+            return null;
+        }
+
         //Only need to know if the deletion succeeded, so use Bool
         public bool RemoveMember(string firstName, string lastName)
         {

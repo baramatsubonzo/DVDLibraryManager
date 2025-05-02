@@ -1,5 +1,4 @@
 using System;
-using System.Reflection.Metadata;
 
 namespace DVDLibraryManager
 {
@@ -14,12 +13,13 @@ namespace DVDLibraryManager
             this.memberCollection = memberCollection;
         }
 
-        public void RunMemberMenu()
+        public void RunMemberMenu(Member loggedInMember)
         {
             bool backToMain = false;
             while (!backToMain)
             {
                 Console.Clear();
+                Console.WriteLine($"Welcome, {loggedInMember.FirstName}!");
                 MemberMenuView.Show();
                 string choice = Console.ReadLine();
                 Console.WriteLine();
