@@ -11,6 +11,7 @@ class Program
         // TODO: Remove later
         InitializeTestData(); // Test data for development
 
+        LoginHandler loginHandler = new LoginHandler(memberCollection);
         StaffHandler staffHandler = new StaffHandler(movieCollection, memberCollection);
         MemberHandler memberHandler = new MemberHandler(movieCollection, memberCollection);
 
@@ -26,10 +27,17 @@ class Program
             switch (choice)
             {
                 case "1":
-                    staffHandler.RunStaffMenu();
+                    if (loginHandler.StaffLogin())
+                    {
+                        staffHandler.RunStaffMenu();
+                    }
                     break;
                 case "2":
-                    memberHandler.RunMemberMenu();
+                    Member loggedInMember = loginHandler.MemberLogin();
+                   if (loggedInMember != null)
+                    {
+                        memberHandler.RunMemberMenu(loggedInMember);
+                    }
                     break;
                 case "0":
                     Console.WriteLine("Exiting the program...");
