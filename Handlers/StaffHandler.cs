@@ -69,8 +69,7 @@ namespace DVDLibraryManager
 
             Classification classification = SelectClassification();
 
-            Console.Write("Enter duration (in minutes): ");
-            int duration = int.Parse(Console.ReadLine());
+            int duration = EnterValidDuration();
 
             Console.Write("Enter number of copies: ");
             int total_copies = int.Parse(Console.ReadLine());
@@ -292,6 +291,27 @@ namespace DVDLibraryManager
                     Console.WriteLine("Invalid selection. Please enter a number between 1 and 4.");
                 }
             }
+        }
+
+        private int EnterValidDuration()
+        {
+          int duration = 0;
+          while (true)
+          {
+            Console.Write("Enter duration (in minutes): ");
+            string input = Console.ReadLine();
+
+            // According to assignment, negative value disallowd.
+            // Tentative max duration is 600 minutes. No formal uppter limit.
+            if (int.TryParse(input, out duration) && duration > 0 && duration <=600)
+            {
+              return duration;
+            }
+            else
+            {
+              Console.WriteLine("Invalid input. Please enter a positive number (max 600 minutes).");
+            }
+          }
         }
 
 
