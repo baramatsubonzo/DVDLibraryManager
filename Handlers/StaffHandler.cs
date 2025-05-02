@@ -67,8 +67,7 @@ namespace DVDLibraryManager
 
             Genre genre = SelectGenre();
 
-            Console.Write("Enter classification (G, PG, M15+, MA15+): ");
-            string classification = Console.ReadLine();
+            Classification classification = SelectClassification();
 
             Console.Write("Enter duration (in minutes): ");
             int duration = int.Parse(Console.ReadLine());
@@ -215,11 +214,10 @@ namespace DVDLibraryManager
 
             return title;
         }
-        
+
         private Genre SelectGenre()
         {
             bool firstAttempt = true; // Display the full genre list only on the first attempt
-
 
             while (true)
             {
@@ -261,6 +259,41 @@ namespace DVDLibraryManager
                 }
             }
         }
+
+        private Classification SelectClassification()
+        {
+            bool firstAttempt = true; // Display the full genre list only on the first attempt
+            while (true)
+            {
+                // Display the full genre list only on the first attempt
+                if (firstAttempt)
+                {
+                  Console.WriteLine("Select classification:");
+                  Console.WriteLine("1. G");
+                  Console.WriteLine("2. PG");
+                  Console.WriteLine("3. M15+");
+                  Console.WriteLine("4. MA15+");
+                  firstAttempt = false;
+                }
+                Console.Write("Enter number (1-4): ");
+
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 4)
+                {
+                    return choice switch
+                    {
+                        1 => Classification.G,
+                        2 => Classification.PG,
+                        3 => Classification.M15Plus,
+                        4 => Classification.MA15Plus
+                    };
+                }
+                else
+                {
+                    Console.WriteLine("Invalid selection. Please enter a number between 1 and 4.");
+                }
+            }
+        }
+
 
     }
 }
