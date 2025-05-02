@@ -66,8 +66,7 @@ namespace DVDLibraryManager
             Console.WriteLine("Enter movie title: ");
             string title = Console.ReadLine();
 
-            Console.WriteLine("Enter genre: ");
-            string genre = Console.ReadLine();
+            Genre genre = SelectGenre();
 
             Console.Write("Enter classification (G, PG, M15+, MA15+): ");
             string classification = Console.ReadLine();
@@ -202,5 +201,51 @@ namespace DVDLibraryManager
             }
           }
         }
+        private Genre SelectGenre()
+        {
+            bool firstAttempt = true; // Display the full genre list only on the first attempt
+
+
+            while (true)
+            {
+                // Display the full genre list only on the first attempt
+                if (firstAttempt)
+                {
+                  Console.WriteLine("Select genre:");
+                  Console.WriteLine("1. Drama");
+                  Console.WriteLine("2. Adventure");
+                  Console.WriteLine("3. Family");
+                  Console.WriteLine("4. Action");
+                  Console.WriteLine("5. SciFi");
+                  Console.WriteLine("6. Comedy");
+                  Console.WriteLine("7. Animated");
+                  Console.WriteLine("8. Thriller");
+                  Console.WriteLine("9. Other");
+                  firstAttempt = false;
+                }
+                Console.Write("Enter number (1-9): ");
+
+                if (int.TryParse(Console.ReadLine(), out int genreChoice) && genreChoice >= 1 && genreChoice <= 9)
+                {
+                    return genreChoice switch
+                    {
+                        1 => Genre.Drama,
+                        2 => Genre.Adventure,
+                        3 => Genre.Family,
+                        4 => Genre.Action,
+                        5 => Genre.SciFi,
+                        6 => Genre.Comedy,
+                        7 => Genre.Animated,
+                        8 => Genre.Thriller,
+                        9 => Genre.Other
+                    };
+                }
+                else
+                {
+                    Console.WriteLine("Invalid genre selection. Please try again.");
+                }
+            }
+        }
+
     }
 }
