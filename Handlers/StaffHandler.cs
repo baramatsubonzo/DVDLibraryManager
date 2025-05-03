@@ -63,16 +63,16 @@ namespace DVDLibraryManager
         {
             Console.WriteLine("Add DVDs to system selected.");
 
+            // Title input
             string title = EnterMovieTitle();
-
+            // Genre input
             Genre genre = SelectGenre();
-
+            // Classification input
             Classification classification = SelectClassification();
-
+            // Duration input
             int duration = EnterValidDuration();
-
-            Console.Write("Enter number of copies: ");
-            int total_copies = int.Parse(Console.ReadLine());
+            // Copies input
+            int total_copies = EnterValidCopies();
             int available_copies = total_copies;
 
             Movie newMovie = new Movie(title, genre, classification, duration, available_copies, total_copies);
@@ -310,6 +310,27 @@ namespace DVDLibraryManager
             else
             {
               Console.WriteLine("Invalid input. Please enter a positive number (max 600 minutes).");
+            }
+          }
+        }
+
+        private int EnterValidCopies()
+        {
+          int copies = 0;
+          while (true)
+          {
+            Console.Write("Enter number of copies: ");
+            string input = Console.ReadLine();
+
+            // According to assignment, negative value disallowd.
+            // Tentative max copies is 100. No formal uppter limit.
+            if (int.TryParse(input, out copies) && copies > 0 && copies <= 100)
+            {
+              return copies;
+            }
+            else
+            {
+              Console.WriteLine("Invalid input. Please enter a positive number (max 100 copies).");
             }
           }
         }
