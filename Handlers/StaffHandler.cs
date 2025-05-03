@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace DVDLibraryManager
 {
@@ -63,20 +64,16 @@ namespace DVDLibraryManager
         {
             Console.WriteLine("Add DVDs to system selected.");
 
-            Console.WriteLine("Enter movie title: ");
-            string title = Console.ReadLine();
-
-            Console.WriteLine("Enter genre: ");
-            string genre = Console.ReadLine();
-
-            Console.Write("Enter classification (G, PG, M15+, MA15+): ");
-            string classification = Console.ReadLine();
-
-            Console.Write("Enter duration (in minutes): ");
-            int duration = int.Parse(Console.ReadLine());
-
-            Console.Write("Enter number of copies: ");
-            int total_copies = int.Parse(Console.ReadLine());
+            // Title input
+            string title = EnterMovieTitle();
+            // Genre input
+            Genre genre = SelectGenre();
+            // Classification input
+            Classification classification = SelectClassification();
+            // Duration input
+            int duration = EnterValidDuration();
+            // Copies input
+            int total_copies = EnterValidCopies();
             int available_copies = total_copies;
 
             Movie newMovie = new Movie(title, genre, classification, duration, available_copies, total_copies);
@@ -109,19 +106,15 @@ namespace DVDLibraryManager
         {
           Console.WriteLine("Register a new member selected.");
 
-          Console.Write("Enter first name: ");
-          string firstName = Console.ReadLine();
-
-          Console.Write("Enter last name: ");
-          string lastName = Console.ReadLine();
-
-          Console.Write("Enter phone number: ");
-          string phoneNumber = Console.ReadLine();
-
-          Console.Write("Set password: ");
-          string password = Console.ReadLine();
+          string firstName = EnterValidFirstName();
+          string lastName = EnterValidLastName();
+          string phoneNumber = EnterValidPhoneNumber();
+          string password = EnterValidPassword();
 
           Member newMember = new Member(firstName, lastName, phoneNumber, password);
+
+          string[] errors = newMember.ReturnMemberErrors();
+
           bool added = memberCollection.AddMember(newMember);
 
           if (added)
@@ -133,7 +126,6 @@ namespace DVDLibraryManager
             Console.WriteLine("Member already exists or collection is full.");
           }
           // Show the member
-          // TODO: Later separate logic and display.
           memberCollection.ListAllMembers();
         }
 
@@ -157,7 +149,6 @@ namespace DVDLibraryManager
             Console.WriteLine("Failed to remove member. They may not exist or are still borrowing DVDs.");
           }
           // Show the member
-          // TODO: Later separate logic and display.
           memberCollection.ListAllMembers();
         }
 
@@ -202,5 +193,195 @@ namespace DVDLibraryManager
             }
           }
         }
+
+        private string EnterMovieTitle()
+        {
+            Console.WriteLine("Enter movie title: ");
+            string title = Console.ReadLine()?.Trim();
+
+            while (title == null || title == "")
+            {
+                Console.WriteLine("Title cannot be empty. Please enter a valid title.");
+                Console.Write("Enter movie title: ");
+                title = Console.ReadLine()?.Trim();
+            }
+
+            return title;
+        }
+
+        private Genre SelectGenre()
+        {
+            bool firstAttempt = true; // Display the full genre list only on the first attempt
+
+            while (true)
+            {
+                // Display the full genre list only on the first attempt
+                if (firstAttempt)
+                {
+                  Console.WriteLine("Select genre:");
+                  Console.WriteLine("1. Drama");
+                  Console.WriteLine("2. Adventure");
+                  Console.WriteLine("3. Family");
+                  Console.WriteLine("4. Action");
+                  Console.WriteLine("5. SciFi");
+                  Console.WriteLine("6. Comedy");
+                  Console.WriteLine("7. Animated");
+                  Console.WriteLine("8. Thriller");
+                  Console.WriteLine("9. Other");
+                  firstAttempt = false;
+                }
+                Console.Write("Enter number (1-9): ");
+
+                if (int.TryParse(Console.ReadLine(), out int genreChoice) && genreChoice >= 1 && genreChoice <= 9)
+                {
+                    return genreChoice switch
+                    {
+                        1 => Genre.Drama,
+                        2 => Genre.Adventure,
+                        3 => Genre.Family,
+                        4 => Genre.Action,
+                        5 => Genre.SciFi,
+                        6 => Genre.Comedy,
+                        7 => Genre.Animated,
+                        8 => Genre.Thriller,
+                        9 => Genre.Other
+                    };
+                }
+                else
+                {
+                    Console.WriteLine("Invalid genre selection. Please try again.");
+                }
+            }
+        }
+
+        private Classification SelectClassification()
+        {
+            bool firstAttempt = true; // Display the full genre list only on the first attempt
+            while (true)
+            {
+                // Display the full genre list only on the first attempt
+                if (firstAttempt)
+                {
+                  Console.WriteLine("Select classification:");
+                  Console.WriteLine("1. G");
+                  Console.WriteLine("2. PG");
+                  Console.WriteLine("3. M15+");
+                  Console.WriteLine("4. MA15+");
+                  firstAttempt = false;
+                }
+                Console.Write("Enter number (1-4): ");
+
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 4)
+                {
+                    return choice switch
+                    {
+                        1 => Classification.G,
+                        2 => Classification.PG,
+                        3 => Classification.M15Plus,
+                        4 => Classification.MA15Plus
+                    };
+                }
+                else
+                {
+                    Console.WriteLine("Invalid selection. Please enter a number between 1 and 4.");
+                }
+            }
+        }
+
+        private int EnterValidDuration()
+        {
+          int duration = 0;
+          while (true)
+          {
+            Console.Write("Enter duration (in minutes): ");
+            string input = Console.ReadLine();
+
+            // According to assignment, negative value disallowd.
+            // Tentative max duration is 600 minutes. No formal uppter limit.
+            if (int.TryParse(input, out duration) && duration > 0 && duration <=600)
+            {
+              return duration;
+            }
+            else
+            {
+              Console.WriteLine("Invalid input. Please enter a positive number (max 600 minutes).");
+            }
+          }
+        }
+
+        private int EnterValidCopies()
+        {
+          int copies = 0;
+          while (true)
+          {
+            Console.Write("Enter number of copies: ");
+            string input = Console.ReadLine();
+
+            // According to assignment, negative value disallowd.
+            // Tentative max copies is 100. No formal uppter limit.
+            if (int.TryParse(input, out copies) && copies > 0 && copies <= 100)
+            {
+              return copies;
+            }
+            else
+            {
+              Console.WriteLine("Invalid input. Please enter a positive number (max 100 copies).");
+            }
+          }
+        }
+      private string EnterValidFirstName()
+      {
+        while (true)
+        {
+            Console.Write("Enter first name: ");
+            string input = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+            Console.WriteLine("First name must not be empty.");
+        }
+      }
+      private string EnterValidLastName()
+      {
+        while (true)
+        {
+            Console.Write("Enter last name: ");
+            string input = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+            Console.WriteLine("Last name must not be empty.");
+        }
+      }
+
+      private string EnterValidPhoneNumber()
+      {
+        while (true)
+        {
+            Console.Write("Enter phone number (10 digits): ");
+            string input = Console.ReadLine();
+            if (input.Length == 10 && input.All(char.IsDigit))
+            {
+                return input;
+            }
+        Console.WriteLine("Phone number must be exactly 10 digits (numbers only).");
+        }
+      }
+      private string EnterValidPassword()
+      {
+        while (true)
+        {
+            Console.Write("Enter password (4 digits): ");
+            string input = Console.ReadLine();
+            if (input.Length == 4 && input.All(char.IsDigit))
+            {
+                return input;
+            }
+        Console.WriteLine("Password must be exactly 4 digits (numbers only).");
+        }
+      }
+
     }
 }
