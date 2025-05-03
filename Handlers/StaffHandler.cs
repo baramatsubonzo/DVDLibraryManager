@@ -106,31 +106,14 @@ namespace DVDLibraryManager
         {
           Console.WriteLine("Register a new member selected.");
 
-          Console.Write("Enter first name: ");
-          string firstName = Console.ReadLine();
-
-          Console.Write("Enter last name: ");
-          string lastName = Console.ReadLine();
-
-          Console.Write("Enter phone number: ");
-          string phoneNumber = Console.ReadLine();
-
-          Console.Write("Set password: ");
-          string password = Console.ReadLine();
+          string firstName = EnterValidFirstName();
+          string lastName = EnterValidLastName();
+          string phoneNumber = EnterValidPhoneNumber();
+          string password = EnterValidPassword();
 
           Member newMember = new Member(firstName, lastName, phoneNumber, password);
 
           string[] errors = newMember.ReturnMemberErrors();
-
-          if (errors.Length > 0)
-          {
-            foreach (var error in errors)
-            {
-              Console.WriteLine("Error: " + error);
-            }
-            return;
-          }
-
 
           bool added = memberCollection.AddMember(newMember);
 
@@ -346,7 +329,59 @@ namespace DVDLibraryManager
             }
           }
         }
+      private string EnterValidFirstName()
+      {
+        while (true)
+        {
+            Console.Write("Enter first name: ");
+            string input = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+            Console.WriteLine("First name must not be empty.");
+        }
+      }
+      private string EnterValidLastName()
+      {
+        while (true)
+        {
+            Console.Write("Enter last name: ");
+            string input = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+            Console.WriteLine("Last name must not be empty.");
+        }
+      }
 
+      private string EnterValidPhoneNumber()
+      {
+        while (true)
+        {
+            Console.Write("Enter phone number (10 digits): ");
+            string input = Console.ReadLine();
+            if (input.Length == 10 && input.All(char.IsDigit))
+            {
+                return input;
+            }
+        Console.WriteLine("Phone number must be exactly 10 digits (numbers only).");
+        }
+      }
+      private string EnterValidPassword()
+      {
+        while (true)
+        {
+            Console.Write("Enter password (4 digits): ");
+            string input = Console.ReadLine();
+            if (input.Length == 4 && input.All(char.IsDigit))
+            {
+                return input;
+            }
+        Console.WriteLine("Password must be exactly 4 digits (numbers only).");
+        }
+      }
 
     }
 }
