@@ -113,8 +113,6 @@ namespace DVDLibraryManager
 
           Member newMember = new Member(firstName, lastName, phoneNumber, password);
 
-          string[] errors = newMember.ReturnMemberErrors();
-
           bool added = memberCollection.AddMember(newMember);
 
           if (added)
