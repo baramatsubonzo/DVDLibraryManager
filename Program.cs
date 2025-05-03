@@ -55,8 +55,8 @@ class Program
     static void InitializeTestData()
     {
         // 映画登録
-        movieCollection.AddMovie(new Movie("Titanic", Genre.Drama, Classification.M15Plus, 60, 5, 5));
-        movieCollection.AddMovie(new Movie("Inception", Genre.SciFi, Classification.M15Plus, 90, 3, 3));
+        movieCollection.AddMovie(new Movie("Titanic", "Romance", "M15+", 60, 5, 5));
+        movieCollection.AddMovie(new Movie("Inception", "Sci-Fi", "M15+", 90, 3, 3));
 
         // 会員登録
         memberCollection.AddMember(new Member("Test", "User1", "000111222", "password"));

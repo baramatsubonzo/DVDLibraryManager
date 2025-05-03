@@ -2,30 +2,11 @@ using System;
 
 namespace DVDLibraryManager
 {
-    public enum Genre
-        {
-            Drama,
-            Adventure,
-            Family,
-            Action,
-            SciFi,
-            Comedy,
-            Animated,
-            Thriller,
-            Other
-        }
-    public enum Classification
-    {
-        G,
-        PG,
-        M15Plus,
-        MA15Plus
-    }
     public class Movie
     {
         public string Title { get; set; }
-        public Genre Genre { get; set; }
-        public Classification Classification { get; set; } // G, PG, M15+, MA15+
+        public string Genre { get; set; }
+        public string Classification { get; set; } // G, PG, M15+, MA15+
         public int Duration { get; set; }
 
         // For Admin
@@ -34,7 +15,8 @@ namespace DVDLibraryManager
 
         public int TotalCopies { get; set; }
 
-        public Movie(string title, Genre genre, Classification classification, int duration, int availableCopies, int copies)
+
+        public Movie(string title, string genre, string classification, int duration, int availableCopies, int copies)
         {
             Title = title;
             Genre = genre;
