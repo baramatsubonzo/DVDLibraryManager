@@ -120,22 +120,17 @@ namespace DVDLibraryManager
 
           Member newMember = new Member(firstName, lastName, phoneNumber, password);
 
-          MemberValidationResult validationResult = newMember.Validate();
+          string[] errors = newMember.ReturnMemberErrors();
 
-          switch (validationResult)
+          if (errors.Length > 0)
           {
-            case MemberValidationResult.Success:
-                break;
-            case MemberValidationResult.InvalidName:
-                Console.WriteLine("Error: First and last name must not be empty.");
-                return;
-            case MemberValidationResult.InvalidPassword:
-                Console.WriteLine("Error: Password must be exactly 4 digits.");
-                return;
-            case MemberValidationResult.InvalidPhoneNumber:
-                Console.WriteLine("Error: Phone number must be exactly 10 digits.");
-                return;
+            foreach (var error in errors)
+            {
+              Console.WriteLine("Error: " + error);
+            }
+            return;
           }
+
 
           bool added = memberCollection.AddMember(newMember);
 

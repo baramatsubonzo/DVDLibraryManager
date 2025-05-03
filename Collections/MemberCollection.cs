@@ -45,10 +45,6 @@ namespace DVDLibraryManager
 
         public bool AddMember(Member member)
         {
-            if (member == null || !member.IsValidMember())
-            {
-                return false;
-            }
             // Check if the collection is full
             if (memberCount >= members.Length)
             {

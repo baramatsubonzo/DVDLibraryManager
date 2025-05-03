@@ -2,13 +2,6 @@ using System;
 
 namespace DVDLibraryManager
 {
-    public enum MemberValidationResult
-    {
-        Success,
-        InvalidName,
-        InvalidPassword,
-        InvalidPhoneNumber
-    }
     public class Member
     {
         // Basic Info
@@ -19,11 +12,6 @@ namespace DVDLibraryManager
         // List of up to 5 borrowed movies
         private string[] borrowedMovies;
         private int borrowedCount;
-        // validation
-        public bool IsValidMember()
-        {
-            return IsValidName() && IsValidPassword() && IsValidPhoneNumber();
-        }
         public Member(string firstName, string lastName, string phoneNumber, string password)
         {
             FirstName = firstName;
@@ -96,69 +84,80 @@ namespace DVDLibraryManager
         {
             return $"Name: {FirstName} {LastName}, Phone: {PhoneNumber}, Borrowed Movies Count: {borrowedCount}";
         }
-        public MemberValidationResult Validate()
-        {
-            if (!IsValidName()) return MemberValidationResult.InvalidName;
-            if (!IsValidPassword()) return MemberValidationResult.InvalidPassword;
-            if (!IsValidPhoneNumber()) return MemberValidationResult.InvalidPhoneNumber;
 
-            return MemberValidationResult.Success;
+        // Provides a public interface to retrieve all validation error messages.
+        // Individual error checks are kept private to encapsulate internal logic.
+        public string[] ReturnMemberErrors()
+        {
+            string[] errors = new string[3];
+            int index = 0;
+
+            var nameError = ReturnNameError();
+            if (nameError != null) errors[index++] = nameError;
+
+            var passwordError = ReturnPasswordError();
+            if (passwordError != null) errors[index++] = passwordError;
+
+            var phoneError = ReturnPhoneNumberError();
+            if (phoneError != null) errors[index++] = phoneError;
+
+            if (index == 0)
+            {
+                return new string[0];
+            }
+
+            string[] result = new string[index];
+            Array.Copy(errors, result, index);
+            return result;
         }
 
 
         // Validation
-         private bool IsValidName()
+        public string ReturnNameError()
         {
-            return
-                !string.IsNullOrWhiteSpace(FirstName) &&
-                !string.IsNullOrWhiteSpace(LastName);
+            if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName))
+            {
+                return "First and last name must not be empty.";
+            }
+            return null;
         }
 
         // According assignment: a four-digit password is set for the member through the staff member.
-        private bool IsValidPassword()
+        public string ReturnPasswordError()
         {
-            if (string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(Password)|| Password.Length != 4)
             {
-                return false;
-            }
-            if (Password.Length != 4)
-            {
-                return false;
+                return "Password must be exactly 4 digits.";
             }
 
             foreach (char c in Password)
             {
                 if (!char.IsDigit(c))
                 {
-                    return false;
+                    return "Password must contain only digits.";
                 }
             }
 
-            return true;
+            return null;
         }
 
         // No specific regulation for phone numbers, but typically set to 10 digits.
-        private bool IsValidPhoneNumber()
+        private string ReturnPhoneNumberError()
         {
-            if (string.IsNullOrWhiteSpace(PhoneNumber))
+            if (string.IsNullOrWhiteSpace(PhoneNumber) || PhoneNumber.Length != 10)
             {
-                return false;
-            }
-
-            if (PhoneNumber.Length != 10)
-            {
-                return false;
+                return "Phone number must be exactly 10 digits.";
             }
 
             foreach (char c in PhoneNumber)
             {
                 if (!char.IsDigit(c))
                 {
-                    return false;
+                    return "Phone number must contain only digits.";
                 }
             }
 
-            return true;
+            return null;
         }
 
     }
