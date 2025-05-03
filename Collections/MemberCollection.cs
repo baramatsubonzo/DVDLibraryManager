@@ -13,7 +13,7 @@ namespace DVDLibraryManager
             members = new Member[MAX_MEMBERS];
             memberCount = 0;
         }
-
+        
         // TODO: Check later if this hash function matches the lecture
         private int HashFunction(string firstName, string lastName)
         {
@@ -46,11 +46,17 @@ namespace DVDLibraryManager
 
         public bool AddMember(Member member)
         {
+            if (member == null || !member.IsValidMember())
+            {
+                return false;
+            }
+            // Check if the collection is full
             if (memberCount >= members.Length)
             {
                 return false;
             }
 
+            // Find slot
             int slot = FindSlot(member.FirstName, member.LastName);
             if (slot == -1)
             {

@@ -12,6 +12,15 @@ namespace DVDLibraryManager
         // List of up to 5 borrowed movies
         private string[] borrowedMovies;
         private int borrowedCount;
+        // validation
+        public bool IsValidMember()
+        {
+            return
+                !string.IsNullOrWhiteSpace(FirstName) &&
+                !string.IsNullOrWhiteSpace(LastName) &&
+                !string.IsNullOrWhiteSpace(PhoneNumber) &&
+                !string.IsNullOrWhiteSpace(Password);
+        }
 
         public Member(string firstName, string lastName, string phoneNumber, string password)
         {
