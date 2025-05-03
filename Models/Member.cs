@@ -2,6 +2,13 @@ using System;
 
 namespace DVDLibraryManager
 {
+    public enum MemberValidationResult
+    {
+        Success,
+        InvalidName,
+        InvalidPassword,
+        InvalidPhoneNumber
+    }
     public class Member
     {
         // Basic Info
@@ -15,13 +22,8 @@ namespace DVDLibraryManager
         // validation
         public bool IsValidMember()
         {
-            return
-                !string.IsNullOrWhiteSpace(FirstName) &&
-                !string.IsNullOrWhiteSpace(LastName) &&
-                !string.IsNullOrWhiteSpace(PhoneNumber) &&
-                !string.IsNullOrWhiteSpace(Password);
+            return IsValidName() && IsValidPassword() && IsValidPhoneNumber();
         }
-
         public Member(string firstName, string lastName, string phoneNumber, string password)
         {
             FirstName = firstName;
@@ -94,5 +96,70 @@ namespace DVDLibraryManager
         {
             return $"Name: {FirstName} {LastName}, Phone: {PhoneNumber}, Borrowed Movies Count: {borrowedCount}";
         }
+        public MemberValidationResult Validate()
+        {
+            if (!IsValidName()) return MemberValidationResult.InvalidName;
+            if (!IsValidPassword()) return MemberValidationResult.InvalidPassword;
+            if (!IsValidPhoneNumber()) return MemberValidationResult.InvalidPhoneNumber;
+
+            return MemberValidationResult.Success;
+        }
+
+
+        // Validation
+         private bool IsValidName()
+        {
+            return
+                !string.IsNullOrWhiteSpace(FirstName) &&
+                !string.IsNullOrWhiteSpace(LastName);
+        }
+
+        // According assignment: a four-digit password is set for the member through the staff member.
+        private bool IsValidPassword()
+        {
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                return false;
+            }
+            if (Password.Length != 4)
+            {
+                return false;
+            }
+
+            foreach (char c in Password)
+            {
+                if (!char.IsDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // No specific regulation for phone numbers, but typically set to 10 digits.
+        private bool IsValidPhoneNumber()
+        {
+            if (string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                return false;
+            }
+
+            if (PhoneNumber.Length != 10)
+            {
+                return false;
+            }
+
+            foreach (char c in PhoneNumber)
+            {
+                if (!char.IsDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }

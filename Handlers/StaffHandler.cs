@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace DVDLibraryManager
 {
@@ -118,6 +119,24 @@ namespace DVDLibraryManager
           string password = Console.ReadLine();
 
           Member newMember = new Member(firstName, lastName, phoneNumber, password);
+
+          MemberValidationResult validationResult = newMember.Validate();
+
+          switch (validationResult)
+          {
+            case MemberValidationResult.Success:
+                break;
+            case MemberValidationResult.InvalidName:
+                Console.WriteLine("Error: First and last name must not be empty.");
+                return;
+            case MemberValidationResult.InvalidPassword:
+                Console.WriteLine("Error: Password must be exactly 4 digits.");
+                return;
+            case MemberValidationResult.InvalidPhoneNumber:
+                Console.WriteLine("Error: Phone number must be exactly 10 digits.");
+                return;
+          }
+
           bool added = memberCollection.AddMember(newMember);
 
           if (added)
@@ -129,7 +148,6 @@ namespace DVDLibraryManager
             Console.WriteLine("Member already exists or collection is full.");
           }
           // Show the member
-          // TODO: Later separate logic and display.
           memberCollection.ListAllMembers();
         }
 
@@ -153,7 +171,6 @@ namespace DVDLibraryManager
             Console.WriteLine("Failed to remove member. They may not exist or are still borrowing DVDs.");
           }
           // Show the member
-          // TODO: Later separate logic and display.
           memberCollection.ListAllMembers();
         }
 

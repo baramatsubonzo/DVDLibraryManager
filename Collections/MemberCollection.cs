@@ -13,7 +13,6 @@ namespace DVDLibraryManager
             members = new Member[MAX_MEMBERS];
             memberCount = 0;
         }
-        
         // TODO: Check later if this hash function matches the lecture
         private int HashFunction(string firstName, string lastName)
         {
