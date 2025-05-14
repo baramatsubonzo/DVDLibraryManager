@@ -1,5 +1,7 @@
 ﻿using System;
 using DVDLibraryManager;
+using DVDLibraryManager.Generators;
+using DVDLibraryManager.Handlers;
 
 class Program
 {
@@ -38,6 +40,10 @@ class Program
                     {
                         memberHandler.RunMemberMenu(loggedInMember);
                     }
+                    break;
+                case "3":
+                    TopMoviesExtractor extractor = new TopMoviesExtractor();
+                    extractor.RunTest(); // Run test when option 3 is selected
                     break;
                 case "0":
                     Console.WriteLine("Exiting the program...");

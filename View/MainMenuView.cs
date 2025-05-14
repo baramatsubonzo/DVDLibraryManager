@@ -16,6 +16,7 @@ namespace DVDLibraryManager
             Console.WriteLine();
             Console.WriteLine("1. Staff");
             Console.WriteLine("2. Member");
+            Console.WriteLine("3. Run Top 3 Extraction Test (Empirical Analysis)");
             Console.WriteLine("0. End the program");
             Console.WriteLine();
             Console.Write("Enter your choice ==> ");
