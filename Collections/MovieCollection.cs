@@ -4,121 +4,116 @@ namespace DVDLibraryManager
 {
     public class MovieCollection
     {
-        private Movie[] movies;
+        /* ---------- 内部構造 ---------- */
+        private enum SlotState { Empty, Occupied, Deleted }
+
+        private class Bucket
+        {
+            public string   Key;    // タイトル
+            public Movie    Value;  // Movie オブジェクト
+            public SlotState State;
+        }
+
+        private readonly Bucket[] table;
         private int movieCount;
 
-        public MovieCollection()
+        public MovieCollection(int capacity = 1000)
         {
-            movies = new Movie[1000]; //max 1000
-            movieCount = 0;
+            table = new Bucket[capacity];
+            for (int i = 0; i < capacity; i++)
+                table[i] = new Bucket { State = SlotState.Empty };
         }
 
-        // TODO: Check later if this hash function matches the lecture
-        private int HashFunction(string title)
+        /* ---------- ハッシュ関数 ---------- */
+        private int Hash(string title)
         {
-            int hash = 0;
+            int h = 0;
             foreach (char c in title)
-            {
-                hash = (hash * 31 + c) % movies.Length;
-            }
-            return hash;
+                h = (h * 31 + c) % table.Length;
+            return h;
         }
 
-        // Find an available bucket with linear probing
-        private int FindBucket(string title)
+        /* ---------- バケット探索（線形） ---------- */
+        private int Find(string title, bool forInsert)
         {
-            int hash = HashFunction(title);
-            int originalHash = hash;
+            int start = Hash(title), idx = start;
 
-            while (movies[hash] != null && movies[hash].Title != title)
+            do
             {
-                hash = (hash + 1) % movies.Length;
-                if (hash == originalHash)
-                {
-                    // If no available bucket is found (hash table is full)
-                    return -1;
-                }
+                Bucket b = table[idx];
+
+                if (b.State == SlotState.Empty)
+                    return forInsert ? idx : -1;
+
+                if (b.State == SlotState.Occupied && b.Key == title)
+                    return idx;
+
+                if (b.State == SlotState.Deleted && forInsert)
+                    return idx;
+
+                idx = (idx + 1) % table.Length;
             }
-            return hash;
+            while (idx != start);
+
+            return -1; // 満杯
         }
 
-        // Add a movie by Hash
-        public void AddMovie(Movie movie)
+        /* ---------- 追加 ---------- */
+        public void AddMovie(Movie m)
         {
-            int bucket = FindBucket(movie.Title);
-            if (bucket == -1)
-            {
-                Console.WriteLine("Movie collection is full!");
-                return;
-            }
+            int idx = Find(m.Title, true);
+            if (idx == -1) { Console.WriteLine("Table full"); return; }
 
-            if (movies[bucket] == null)
+            Bucket b = table[idx];
+
+            if (b.State == SlotState.Occupied)
             {
-                movies[bucket] = movie;
-                movieCount++;
+                b.Value.AddCopies(m.TotalCopies); // 既にある → コピー数追加
             }
             else
             {
-                // If the title is the same, add the number of copies
-                movies[bucket].AddCopies(movie.TotalCopies);
+                table[idx] = new Bucket
+                {
+                    Key   = m.Title,
+                    Value = m,
+                    State = SlotState.Occupied
+                };
+                movieCount++;
             }
         }
 
-        // Search for a movie by Hash
+        /* ---------- 検索 ---------- */
         public Movie FindMovie(string title)
         {
-            int bucket = FindBucket(title);
-            // Check if an available bucket was found by `bucket !=-1`
-            if (bucket != -1 && movies[bucket] != null && movies[bucket].Title == title)
-            {
-                return movies[bucket];
-            }
-            return null;
+            int idx = Find(title, false);
+            return idx == -1 ? null : table[idx].Value;
         }
 
-        // Delete a movie by Hash
+        /* ---------- 削除 ---------- */
         public bool RemoveMovie(string title)
         {
-            int bucket = FindBucket(title);
-            // Check if an available bucket was found by `bucket !=1`
-            if (bucket !=-1 && movies[bucket] != null && movies[bucket].Title == title)
-            {
-                movies[bucket] = null;
-                movieCount--;
-                return true;
-            }
-            return false;
+            int idx = Find(title, false);
+            if (idx == -1) return false;
+
+            table[idx].Value = null;
+            table[idx].State = SlotState.Deleted;
+            movieCount--;
+            return true;
         }
 
-        // Returns all movies stored in the collection, alphabetically by title.
+        /* ---------- 一覧取得 ---------- */
         public Movie[] GetAllMovies()
         {
-            int count = 0;
+            Movie[] res = new Movie[movieCount];
+            int k = 0;
+            foreach (var b in table)
+                if (b.State == SlotState.Occupied)
+                    res[k++] = b.Value;
 
-            // Count movies in the array without null
-            for (int i = 0; i < movies.Length; i++)
-            {
-                if (movies[i] != null)
-                {
-                    count++;
-                }
-            }
-
-            // Copy valid movies into new array
-            Movie[] result = new Movie[count];
-            int index = 0;
-            for (int i = 0; i < movies.Length; i++)
-            {
-                if (movies[i] != null)
-                {
-                    result[index++] = movies[i];
-                }
-            }
-
-            // Sort result alphabetically
-            Array.Sort(result, (a, b) => a.Title.CompareTo(b.Title));
-
-            return result;
+            Array.Sort(res, (a, b) => a.Title.CompareTo(b.Title));
+            return res;
         }
+
+        public int Count => movieCount;
     }
 }
