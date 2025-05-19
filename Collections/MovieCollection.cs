@@ -24,8 +24,8 @@ namespace DVDLibraryManager
             return hash;
         }
 
-        // Find an available slot with linear probing
-        private int FindSlot(string title)
+        // Find an available bucket with linear probing
+        private int FindBucket(string title)
         {
             int hash = HashFunction(title);
             int originalHash = hash;
@@ -35,7 +35,7 @@ namespace DVDLibraryManager
                 hash = (hash + 1) % movies.Length;
                 if (hash == originalHash)
                 {
-                    // If no available slot is found (hash table is full)
+                    // If no available bucket is found (hash table is full)
                     return -1;
                 }
             }
@@ -45,33 +45,33 @@ namespace DVDLibraryManager
         // Add a movie by Hash
         public void AddMovie(Movie movie)
         {
-            int slot = FindSlot(movie.Title);
-            if (slot == -1)
+            int bucket = FindBucket(movie.Title);
+            if (bucket == -1)
             {
                 Console.WriteLine("Movie collection is full!");
                 return;
             }
 
-            if (movies[slot] == null)
+            if (movies[bucket] == null)
             {
-                movies[slot] = movie;
+                movies[bucket] = movie;
                 movieCount++;
             }
             else
             {
                 // If the title is the same, add the number of copies
-                movies[slot].AddCopies(movie.TotalCopies);
+                movies[bucket].AddCopies(movie.TotalCopies);
             }
         }
 
         // Search for a movie by Hash
         public Movie FindMovie(string title)
         {
-            int slot = FindSlot(title);
-            // Check if an available slot was found by `slot !=-1`
-            if (slot != -1 && movies[slot] != null && movies[slot].Title == title)
+            int bucket = FindBucket(title);
+            // Check if an available bucket was found by `bucket !=-1`
+            if (bucket != -1 && movies[bucket] != null && movies[bucket].Title == title)
             {
-                return movies[slot];
+                return movies[bucket];
             }
             return null;
         }
@@ -79,11 +79,11 @@ namespace DVDLibraryManager
         // Delete a movie by Hash
         public bool RemoveMovie(string title)
         {
-            int slot = FindSlot(title);
-            // Check if an available slot was found by `slot !=1`
-            if (slot !=-1 && movies[slot] != null && movies[slot].Title == title)
+            int bucket = FindBucket(title);
+            // Check if an available bucket was found by `bucket !=1`
+            if (bucket !=-1 && movies[bucket] != null && movies[bucket].Title == title)
             {
-                movies[slot] = null;
+                movies[bucket] = null;
                 movieCount--;
                 return true;
             }
