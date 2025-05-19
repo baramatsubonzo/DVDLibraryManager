@@ -6,11 +6,18 @@ namespace DVDLibraryManager
     {
         private Movie[] movies;
         private int movieCount;
+        private const int EMPTY = -1;  // 空のスロットのマーカー
+        private const int DELETED = -2; // 削除されたスロットのマーカー
 
         public MovieCollection()
         {
             movies = new Movie[1000]; //max 1000
             movieCount = 0;
+            // 初期化時にすべてのスロットをEMPTYに設定
+            for (int i = 0; i < movies.Length; i++)
+            {
+                movies[i] = new Movie(EMPTY.ToString(), Genre.Other, Classification.G, 0, 0, 0);
+            }
         }
 
         // TODO: Check later if this hash function matches the lecture
@@ -24,98 +31,128 @@ namespace DVDLibraryManager
             return hash;
         }
 
-        // Find an available slot with linear probing
+        // 二次探査法を使用して利用可能なスロットを見つける
         private int FindSlot(string title)
         {
-            int hash = HashFunction(title);
-            int originalHash = hash;
-
-            while (movies[hash] != null && movies[hash].Title != title)
+            int bucket = HashFunction(title);
+            int i = 0;
+            int offset = 0;
+            
+            while (i < movies.Length && 
+                   movies[(bucket + offset) % movies.Length].Title != EMPTY.ToString() && 
+                   movies[(bucket + offset) % movies.Length].Title != DELETED.ToString() && 
+                   movies[(bucket + offset) % movies.Length].Title != title)
             {
-                hash = (hash + 1) % movies.Length;
-                if (hash == originalHash)
-                {
-                    // If no available slot is found (hash table is full)
-                    return -1;
-                }
+                i++;
+                offset = i * i; // 二次探査法
             }
-            return hash;
+            
+            if (i >= movies.Length) {
+                return -1; // テーブルが満杯
+            }
+            
+            return (bucket + offset) % movies.Length;
         }
 
-        // Add a movie by Hash
+        // 映画を検索するためのスロットを見つける
+        private int FindMovieSlot(string title)
+        {
+            int bucket = HashFunction(title);
+            int i = 0;
+            int offset = 0;
+            
+            while (i < movies.Length && 
+                   movies[(bucket + offset) % movies.Length].Title != EMPTY.ToString() && 
+                   movies[(bucket + offset) % movies.Length].Title != title)
+            {
+                i++;
+                offset = i * i; // 二次探査法
+            }
+            
+            if (i >= movies.Length || movies[(bucket + offset) % movies.Length].Title == EMPTY.ToString()) {
+                return -1; // 見つからない
+            }
+            
+            return (bucket + offset) % movies.Length;
+        }
+
+        // 映画をハッシュテーブルに追加
         public void AddMovie(Movie movie)
         {
-            int slot = FindSlot(movie.Title);
-            if (slot == -1)
-            {
+            if (movieCount >= movies.Length) {
                 Console.WriteLine("Movie collection is full!");
                 return;
             }
 
-            if (movies[slot] == null)
+            int slot = FindSlot(movie.Title);
+            if (slot == -1)
+            {
+                Console.WriteLine("Failed to find an available slot!");
+                return;
+            }
+
+            if (movies[slot].Title == EMPTY.ToString() || movies[slot].Title == DELETED.ToString())
             {
                 movies[slot] = movie;
                 movieCount++;
             }
             else
             {
-                // If the title is the same, add the number of copies
+                // タイトルが同じ場合、コピー数を追加
                 movies[slot].AddCopies(movie.TotalCopies);
             }
         }
 
-        // Search for a movie by Hash
+        // ハッシュを使用して映画を検索
         public Movie FindMovie(string title)
         {
-            int slot = FindSlot(title);
-            // Check if an available slot was found by `slot !=-1`
-            if (slot != -1 && movies[slot] != null && movies[slot].Title == title)
+            int slot = FindMovieSlot(title);
+            if (slot != -1)
             {
                 return movies[slot];
             }
             return null;
         }
 
-        // Delete a movie by Hash
+        // ハッシュを使用して映画を削除
         public bool RemoveMovie(string title)
         {
-            int slot = FindSlot(title);
-            // Check if an available slot was found by `slot !=1`
-            if (slot !=-1 && movies[slot] != null && movies[slot].Title == title)
+            int slot = FindMovieSlot(title);
+            if (slot != -1)
             {
-                movies[slot] = null;
+                movies[slot] = new Movie(DELETED.ToString(), Genre.Other, Classification.G, 0, 0, 0); // 削除マーカーとしてDELETEDを使用
                 movieCount--;
                 return true;
             }
             return false;
         }
 
-        // Returns all movies stored in the collection, alphabetically by title.
+        // コレクションに保存されているすべての映画をタイトルのアルファベット順に返します
         public Movie[] GetAllMovies()
         {
             int count = 0;
 
-            // Count movies in the array without null
+            // 配列内の有効な映画をカウント
             for (int i = 0; i < movies.Length; i++)
             {
-                if (movies[i] != null)
+                if (movies[i].Title != EMPTY.ToString() && movies[i].Title != DELETED.ToString())
                 {
                     count++;
                 }
             }
 
-            // Copy valid movies into new array
+            // 有効な映画を新しい配列にコピー
             Movie[] result = new Movie[count];
             int index = 0;
             for (int i = 0; i < movies.Length; i++)
             {
-                if (movies[i] != null)
+                if (movies[i].Title != EMPTY.ToString() && movies[i].Title != DELETED.ToString())
                 {
                     result[index++] = movies[i];
                 }
             }
 
-            // Sort result alphabetically
+            // 結果をアルファベット順にソート
             Array.Sort(result, (a, b) => a.Title.CompareTo(b.Title));
 
             return result;
