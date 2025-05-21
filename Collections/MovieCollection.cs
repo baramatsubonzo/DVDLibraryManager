@@ -4,13 +4,12 @@ namespace DVDLibraryManager
 {
     public class MovieCollection
     {
-        /* ---------- 内部構造 ---------- */
         private enum SlotState { Empty, Occupied, Deleted }
 
         private class Bucket
         {
-            public string   Key;    // タイトル
-            public Movie    Value;  // Movie オブジェクト
+            public string   Key;    // title
+            public Movie    Value;  // Movie object
             public SlotState State;
         }
 
@@ -24,7 +23,7 @@ namespace DVDLibraryManager
                 table[i] = new Bucket { State = SlotState.Empty };
         }
 
-        /* ---------- ハッシュ関数 ---------- */
+
         private int Hash(string title)
         {
             int h = 0;
@@ -33,7 +32,7 @@ namespace DVDLibraryManager
             return h;
         }
 
-        /* ---------- バケット探索（線形） ---------- */
+
         private int Find(string title, bool forInsert)
         {
             int start = Hash(title), idx = start;
@@ -55,10 +54,10 @@ namespace DVDLibraryManager
             }
             while (idx != start);
 
-            return -1; // 満杯
+            return -1;
         }
 
-        /* ---------- 追加 ---------- */
+
         public void AddMovie(Movie m)
         {
             int idx = Find(m.Title, true);
@@ -82,14 +81,14 @@ namespace DVDLibraryManager
             }
         }
 
-        /* ---------- 検索 ---------- */
+
         public Movie FindMovie(string title)
         {
             int idx = Find(title, false);
             return idx == -1 ? null : table[idx].Value;
         }
 
-        /* ---------- 削除 ---------- */
+
         public bool RemoveMovie(string title)
         {
             int idx = Find(title, false);
@@ -101,7 +100,7 @@ namespace DVDLibraryManager
             return true;
         }
 
-        /* ---------- 一覧取得 ---------- */
+
         public Movie[] GetAllMovies()
         {
             Movie[] res = new Movie[movieCount];
