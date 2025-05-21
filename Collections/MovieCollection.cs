@@ -4,12 +4,16 @@ namespace DVDLibraryManager
 {
     public class MovieCollection
     {
+        // To avoid null, I introduced an enum with a default value of Empty (0) for bucket state management.
+        private enum BucketState { Empty, Occupied, Deleted }
         private Movie[] movies;
+        private BucketState[] states;
         private int movieCount;
-
-        public MovieCollection()
+        //max 1000
+        public MovieCollection(int size = 1000)
         {
-            movies = new Movie[1000]; //max 1000
+            movies = new Movie[size];
+            states = new BucketState[size];
             movieCount = 0;
         }
 
@@ -30,60 +34,79 @@ namespace DVDLibraryManager
             int hash = HashFunction(title);
             int originalHash = hash;
 
-            while (movies[hash] != null && movies[hash].Title != title)
+            do
             {
-                hash = (hash + 1) % movies.Length;
-                if (hash == originalHash)
-                {
-                    // If no available bucket is found (hash table is full)
+                if (states[hash] == BucketState.Empty)
                     return -1;
-                }
+                if (states[hash] == BucketState.Occupied && movies[hash].Title == title)
+                    return hash;
+                hash = (hash + 1) % movies.Length;
             }
-            return hash;
+            while (hash != originalHash);
+            return -1;
+        }
+
+        // For insersion
+        private int FindInsertBucket(string title)
+        {
+            int hash = HashFunction(title);
+            int originalHash = hash;
+            do
+            {
+                // Todo: Collision Check later
+                if (states[hash] == BucketState.Empty || states[hash] == BucketState.Deleted)
+                    return hash;
+                if (states[hash] == BucketState.Occupied && movies[hash].Title == title)
+                    return hash;
+                hash = (hash + 1) % movies.Length;
+            }
+            while (hash != originalHash);
+            return -1;
         }
 
         // Add a movie by Hash
         public void AddMovie(Movie movie)
         {
-            int bucket = FindBucket(movie.Title);
+            int bucket = FindInsertBucket(movie.Title);
             if (bucket == -1)
             {
                 Console.WriteLine("Movie collection is full!");
                 return;
             }
-
-            if (movies[bucket] == null)
+            // If it exists, increase the copy count
+            if (states[bucket] == BucketState.Occupied)
             {
-                movies[bucket] = movie;
-                movieCount++;
+                movies[bucket].AddCopies(movie.TotalCopies);
             }
             else
             {
-                // If the title is the same, add the number of copies
-                movies[bucket].AddCopies(movie.TotalCopies);
+                movies[bucket] = movie;
+                states[bucket] = BucketState.Occupied;
+                movieCount++;
             }
         }
 
-        // Search for a movie by Hash
+        // Search for a movie
         public Movie FindMovie(string title)
         {
             int bucket = FindBucket(title);
-            // Check if an available bucket was found by `bucket !=-1`
-            if (bucket != -1 && movies[bucket] != null && movies[bucket].Title == title)
+
+            if (bucket != -1 && states[bucket] == BucketState.Occupied)
             {
                 return movies[bucket];
             }
             return null;
         }
 
-        // Delete a movie by Hash
+        // Delete a movie. Set the Delete flag.
         public bool RemoveMovie(string title)
         {
             int bucket = FindBucket(title);
-            // Check if an available bucket was found by `bucket !=1`
-            if (bucket !=-1 && movies[bucket] != null && movies[bucket].Title == title)
+
+            if (bucket !=-1 && states[bucket] == BucketState.Occupied)
             {
                 movies[bucket] = null;
+                states[bucket] = BucketState.Deleted;
                 movieCount--;
                 return true;
             }
@@ -93,32 +116,13 @@ namespace DVDLibraryManager
         // Returns all movies stored in the collection, alphabetically by title.
         public Movie[] GetAllMovies()
         {
-            int count = 0;
-
-            // Count movies in the array without null
+            Movie[] res = new Movie[movieCount];
+            int k = 0;
             for (int i = 0; i < movies.Length; i++)
-            {
-                if (movies[i] != null)
-                {
-                    count++;
-                }
-            }
-
-            // Copy valid movies into new array
-            Movie[] result = new Movie[count];
-            int index = 0;
-            for (int i = 0; i < movies.Length; i++)
-            {
-                if (movies[i] != null)
-                {
-                    result[index++] = movies[i];
-                }
-            }
-
-            // Sort result alphabetically
-            Array.Sort(result, (a, b) => a.Title.CompareTo(b.Title));
-
-            return result;
+                if (states[i] == BucketState.Occupied)
+                    res[k++] = movies[i];
+                Array.Sort(res, (a, b) => a.Title.CompareTo(b.Title));
+            return res;
         }
     }
 }
