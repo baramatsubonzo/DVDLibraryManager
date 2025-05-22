@@ -139,7 +139,6 @@ namespace DVDLibraryManager
           Console.WriteLine($"Failed to register member: {e.Message}");
         }
           // Show the member
-          Console.WriteLine("=== Current Members ===");
           memberCollection.ListAllMembers();
         }
 
