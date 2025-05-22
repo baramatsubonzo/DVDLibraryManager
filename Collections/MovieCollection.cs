@@ -6,14 +6,23 @@ namespace DVDLibraryManager
     {
         // To avoid null, I introduced an enum with a default value of Empty (0) for bucket state management.
         private enum BucketState { Empty, Occupied, Deleted }
-        private Movie[] movies;
-        private BucketState[] states;
+
+        // Although only key-value pairs are required by the assignment,
+        // this struct also includes a state field (Empty, Occupied, Deleted)
+        // to improve maintainability and support future extensions.
+        private struct Bucket
+        {
+            public string Key; // movie title
+            public Movie Value; // movie object
+            public BucketState State;
+        }
+        private Bucket[] table;
         private int movieCount;
         //max 1000
         public MovieCollection(int size = 1000)
         {
-            movies = new Movie[size];
-            states = new BucketState[size];
+            // Default value of BucketState is Empty(0)
+            table = new Bucket[size];
             movieCount = 0;
         }
 
@@ -23,7 +32,7 @@ namespace DVDLibraryManager
             int hash = 0;
             foreach (char c in title)
             {
-                hash = (hash * 31 + c) % movies.Length;
+                hash = (hash * 31 + c) % table.Length;
             }
             return hash;
         }
@@ -36,11 +45,11 @@ namespace DVDLibraryManager
 
             do
             {
-                if (states[hash] == BucketState.Empty)
+                if (table[hash].State == BucketState.Empty)
                     return -1;
-                if (states[hash] == BucketState.Occupied && movies[hash].Title == title)
+                if (table[hash].State == BucketState.Occupied && table[hash].Key == title)
                     return hash;
-                hash = (hash + 1) % movies.Length;
+                hash = (hash + 1) % table.Length;
             }
             while (hash != originalHash);
             return -1;
@@ -54,11 +63,11 @@ namespace DVDLibraryManager
             do
             {
                 // Todo: Collision Check later
-                if (states[hash] == BucketState.Empty || states[hash] == BucketState.Deleted)
+                if (table[hash].State == BucketState.Empty || table[hash].State == BucketState.Deleted)
                     return hash;
-                if (states[hash] == BucketState.Occupied && movies[hash].Title == title)
+                if (table[hash].State == BucketState.Occupied && table[hash].Key == title)
                     return hash;
-                hash = (hash + 1) % movies.Length;
+                hash = (hash + 1) % table.Length;
             }
             while (hash != originalHash);
             return -1;
@@ -74,14 +83,15 @@ namespace DVDLibraryManager
                 return;
             }
             // If it exists, increase the copy count
-            if (states[bucket] == BucketState.Occupied)
+            if (table[bucket].State == BucketState.Occupied)
             {
-                movies[bucket].AddCopies(movie.TotalCopies);
+                table[bucket].Value.AddCopies(movie.TotalCopies);
             }
             else
             {
-                movies[bucket] = movie;
-                states[bucket] = BucketState.Occupied;
+                table[bucket].Key = movie.Title;
+                table[bucket].Value = movie;
+                table[bucket].State = BucketState.Occupied;
                 movieCount++;
             }
         }
@@ -91,9 +101,9 @@ namespace DVDLibraryManager
         {
             int bucket = FindBucket(title);
 
-            if (bucket != -1 && states[bucket] == BucketState.Occupied)
+            if (bucket != -1 && table[bucket].State == BucketState.Occupied)
             {
-                return movies[bucket];
+                return table[bucket].Value;
             }
             return null;
         }
@@ -103,10 +113,11 @@ namespace DVDLibraryManager
         {
             int bucket = FindBucket(title);
 
-            if (bucket !=-1 && states[bucket] == BucketState.Occupied)
+            if (bucket !=-1 && table[bucket].State == BucketState.Occupied)
             {
-                movies[bucket] = null;
-                states[bucket] = BucketState.Deleted;
+                table[bucket].Key = null;
+                table[bucket].Value = null;
+                table[bucket].State = BucketState.Deleted;
                 movieCount--;
                 return true;
             }
@@ -118,9 +129,9 @@ namespace DVDLibraryManager
         {
             Movie[] res = new Movie[movieCount];
             int k = 0;
-            for (int i = 0; i < movies.Length; i++)
-                if (states[i] == BucketState.Occupied)
-                    res[k++] = movies[i];
+            for (int i = 0; i < table.Length; i++)
+                if (table[i].State == BucketState.Occupied)
+                    res[k++] = table[i].Value;
                 Array.Sort(res, (a, b) => a.Title.CompareTo(b.Title));
             return res;
         }
