@@ -36,6 +36,8 @@ namespace DVDLibraryManager
 
         public Movie(string title, Genre genre, Classification classification, int duration, int availableCopies, int copies)
         {
+            ValidateInput(title, duration, availableCopies, copies);
+
             Title = title;
             Genre = genre;
             Classification = classification;
@@ -80,6 +82,25 @@ namespace DVDLibraryManager
         {
             return
                 $"Title: {Title}, Genre: {Genre}, Classification: {Classification}, Duration: {Duration} minutes, Available Copies: {AvailableCopies}";
+        }
+
+
+        private void ValidateInput(string title, int duration, int availableCopies, int copies)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ArgumentException("Title cannot be empty.");
+
+            if (duration <= 0 || duration > 600)
+                throw new ArgumentException("Duration must be between 1 and 600 minutes.");
+
+            if (availableCopies < 0)
+                throw new ArgumentException("Available copies cannot be negative.");
+
+            if (copies <= 0)
+                throw new ArgumentException("Total copies must be at least 1.");
+
+            if (availableCopies > copies)
+                throw new ArgumentException("Available copies cannot exceed total copies.");
         }
     }
 }
