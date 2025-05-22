@@ -8,7 +8,6 @@ class Program
 
     static void Main(string[] args)
     {
-        // TODO: Remove later
         InitializeTestData(); // Test data for development
 
         LoginHandler loginHandler = new LoginHandler(memberCollection);
@@ -34,7 +33,7 @@ class Program
                     break;
                 case "2":
                     Member loggedInMember = loginHandler.MemberLogin();
-                   if (loggedInMember != null)
+                    if (loggedInMember != null)
                     {
                         memberHandler.RunMemberMenu(loggedInMember);
                     }
@@ -51,16 +50,16 @@ class Program
     }
 
 
-    // TODO: Remove later
+    // Test case
     static void InitializeTestData()
     {
-        // 映画登録
+        // Register Movie
         movieCollection.AddMovie(new Movie("Titanic", Genre.Drama, Classification.M15Plus, 60, 5, 5));
         movieCollection.AddMovie(new Movie("Inception", Genre.SciFi, Classification.M15Plus, 90, 3, 3));
 
-        // 会員登録
-        memberCollection.AddMember(new Member("Test", "User1", "000111222", "password"));
-        memberCollection.AddMember(new Member("Test", "User2", "000111333", "password"));
+        // Register Member
+        memberCollection.AddMember(new Member("Test", "User1", "000111222", "0000"));
+        memberCollection.AddMember(new Member("Test", "User2", "000111333", "0000"));
     }
 
 }
