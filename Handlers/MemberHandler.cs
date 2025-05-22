@@ -33,13 +33,13 @@ namespace DVDLibraryManager
                         HandleDisplayMovieInfo();
                         break;
                     case "3":
-                        HandleBorrowMovie();
+                        HandleBorrowMovie(loggedInMember);
                         break;
                     case "4":
-                        HandleReturnMovie();
+                        HandleReturnMovie(loggedInMember);
                         break;
                     case "5":
-                        HandleListBorrowedMoviews();
+                        HandleListBorrowedMoviews(loggedInMember);
                         break;
                     case "6":
                         HandleDisplayTop3Movies();
@@ -89,22 +89,9 @@ namespace DVDLibraryManager
             }
         }
 
-        private void HandleBorrowMovie()
+        private void HandleBorrowMovie(Member loggedInMember)
         {
             Console.WriteLine("Borrow a movie DVD selected.");
-
-            // Confirm whether member or not
-            Console.Write("Enter your first name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Enter your last name: ");
-            string lastName = Console.ReadLine();
-
-            Member member = memberCollection.FindMember(firstName, lastName);
-            if (member == null)
-            {
-                Console.WriteLine("Member not found.");
-                return;
-            }
 
             // Confirm the movie
             Console.Write("Enter movie title to borrow: ");
@@ -122,7 +109,7 @@ namespace DVDLibraryManager
             {
                 Console.WriteLine("This movie is currently unavailable.");
             }
-            else if (!member.BorrowMovie(movieTitle))
+            else if (!loggedInMember.BorrowMovie(movieTitle))
             {
                 Console.WriteLine("You have reached your borrowing limit or already borrowed this movie.");
                 // restore stock
@@ -134,25 +121,14 @@ namespace DVDLibraryManager
             }
         }
 
-        private void HandleReturnMovie()
+        private void HandleReturnMovie(Member loggedInMember)
         {
             Console.WriteLine("Return a movie DVD selected.");
-            Console.Write("Enter your first name: ");
-            string returnFirstName = Console.ReadLine();
-            Console.Write("Enter your last name: ");
-            string returnLastName = Console.ReadLine();
-
-            Member returnMember = memberCollection.FindMember(returnFirstName, returnLastName);
-            if (returnMember == null)
-            {
-                Console.WriteLine("Member not found.");
-                return;
-            }
 
             Console.Write("Enter movie title to return: ");
             string returnMovieTitle = Console.ReadLine();
 
-            if (!returnMember.ReturnMovie(returnMovieTitle))
+            if (!loggedInMember.ReturnMovie(returnMovieTitle))
             {
                 Console.WriteLine("You have not borrowed this movie.");
             }
@@ -170,38 +146,24 @@ namespace DVDLibraryManager
                 }
             }
         }
-        private void HandleListBorrowedMoviews()
+        private void HandleListBorrowedMoviews(Member loggedInMember)
         {
             Console.WriteLine("List current borrowing movies selected.");
             Console.WriteLine("=== List Your Borrowed Movies ===");
 
-            Console.Write("Enter your first name: ");
-            string memberFirstName = Console.ReadLine();
-            Console.Write("Enter your last name: ");
-            string memberLastName = Console.ReadLine();
+            string[] borrowed = loggedInMember.GetCurrentBorrowedMovies();
 
-            Member currentMember = memberCollection.FindMember(memberFirstName, memberLastName);
-
-            if (currentMember != null)
+            if (borrowed.Length == 0)
             {
-                string[] borrowed = currentMember.GetCurrentBorrowedMovies();
-
-                if (borrowed.Length == 0)
-                {
-                    Console.WriteLine("You are not currently borrowing any movies.");
-                }
-                else
-                {
-                    Console.WriteLine("Your borrowed movies:");
-                    foreach (var title in borrowed)
-                    {
-                        Console.WriteLine($"- {title}");
-                    }
-                }
+                Console.WriteLine("You are not currently borrowing any movies.");
             }
             else
             {
-                Console.WriteLine("Member not found.");
+                Console.WriteLine("Your borrowed movies:");
+                foreach (var title in borrowed)
+                {
+                    Console.WriteLine($"- {title}");
+                }
             }
         }
 

@@ -60,6 +60,7 @@ class Program
         // Register Member
         memberCollection.AddMember(new Member("Test", "User1", "000111222", "0000"));
         memberCollection.AddMember(new Member("Test", "User2", "000111333", "0000"));
+        memberCollection.AddMember(new Member("hoge", "hoge", "0000000000", "0000"));
     }
 
 }
