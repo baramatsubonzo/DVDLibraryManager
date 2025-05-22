@@ -6,7 +6,7 @@ namespace DVDLibraryManager
     {
         private MovieCollection movieCollection;
         private MemberCollection memberCollection;
-        
+
         public MemberHandler(MovieCollection movieCollection, MemberCollection memberCollection)
         {
             this.movieCollection = movieCollection;
@@ -42,7 +42,7 @@ namespace DVDLibraryManager
                         HandleListBorrowedMoviews();
                         break;
                     case "6":
-                        Console.WriteLine("Display the top 3 movies rented by members selected.");
+                        HandleDisplayTop3Movies();
                         break;
                     case "0":
                         backToMain = true;
@@ -164,10 +164,10 @@ namespace DVDLibraryManager
                     returnMovie.Return();
                     Console.WriteLine($"You have successfully returned: {returnMovie.Title}");
                 }
-                    else
-                    {
-                        Console.WriteLine("Movie not found in collection.");
-                    }
+                else
+                {
+                    Console.WriteLine("Movie not found in collection.");
+                }
             }
         }
         private void HandleListBorrowedMoviews()
@@ -203,6 +203,12 @@ namespace DVDLibraryManager
             {
                 Console.WriteLine("Member not found.");
             }
+        }
+
+        private void HandleDisplayTop3Movies()
+        {
+            Console.WriteLine("=== Top 3 Most Frequently Borrowed Movies ===");
+            movieCollection.DisplayTop3Movies();
         }
     }
 }
