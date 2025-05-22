@@ -110,7 +110,7 @@ namespace DVDLibraryManager
         {
             int bucket = FindBucket(title);
 
-            if (bucket !=-1 && table[bucket].State == BucketState.Occupied)
+            if (bucket != -1 && table[bucket].State == BucketState.Occupied)
             {
                 table[bucket].Key = null;
                 table[bucket].Value = null;
@@ -129,8 +129,70 @@ namespace DVDLibraryManager
             for (int i = 0; i < table.Length; i++)
                 if (table[i].State == BucketState.Occupied)
                     res[k++] = table[i].Value;
-                Array.Sort(res, (a, b) => a.Title.CompareTo(b.Title));
+            Array.Sort(res, (a, b) => a.Title.CompareTo(b.Title));
             return res;
         }
+
+        // Top 3 extract algorithm
+        public void DisplayTop3Movies()
+        {
+            if (movieCount == 0)
+            {
+                Console.WriteLine("No movies in the system.");
+                return;
+            }
+
+            // First, store only the Occupied movies in a temporary array
+            Movie[] validMovies = new Movie[movieCount];
+            int k = 0;
+            for (int i = 0; i < table.Length; i++)
+            {
+                if (table[i].State == BucketState.Occupied)
+                    validMovies[k++] = table[i].Value;
+            }
+
+            // 1-based heap array
+            Movie[] heap = new Movie[movieCount + 1];
+            for (int i = 0; i < movieCount; i++)
+                heap[i + 1] = validMovies[i];
+
+            // Construct the heap
+            for (int i = movieCount / 2; i >= 1; i--)
+                Heapify(heap, i, movieCount);
+
+            int n = movieCount;
+            for (int i = 0; i < 3 && n > 0; i++)
+            {
+                Console.WriteLine($"{heap[1].Title}: {heap[1].TotalBorrowedCount}回");
+                Swap(heap, 1, n);
+                n--;
+                Heapify(heap, 1, n);
+            }
+        }
+
+        // Heapify
+        private void Heapify(Movie[] heap, int i, int heapSize)
+        {
+            int left = 2 * i;
+            int right = 2 * i + 1;
+            int largest = i;
+            if (left <= heapSize && heap[left].TotalBorrowedCount > heap[largest].TotalBorrowedCount)
+                largest = left;
+            if (right <= heapSize && heap[right].TotalBorrowedCount > heap[largest].TotalBorrowedCount)
+                largest = right;
+            if (largest != i)
+            {
+                Swap(heap, i, largest);
+                Heapify(heap, largest, heapSize);
+            }
+        }
+
+        private void Swap(Movie[] arr, int i, int j)
+        {
+            Movie temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+
     }
 }
