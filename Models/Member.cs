@@ -14,6 +14,10 @@ namespace DVDLibraryManager
         private int borrowedCount;
         public Member(string firstName, string lastName, string phoneNumber, string password)
         {
+            // Input is already validated at the UI lebel,
+            // but model-level validation is important for system robustness and data integrity.
+            ValidateInput(firstName, lastName, phoneNumber, password);
+
             FirstName = firstName;
             LastName = lastName;
             PhoneNumber = phoneNumber;
@@ -50,7 +54,7 @@ namespace DVDLibraryManager
             {
                 if (borrowedMovies[i] == movieTitle)
                 {
-                  // If found, shift the following elements forward
+                    // If found, shift the following elements forward
                     for (int j = i; j < borrowedCount - 1; j++)
                     {
                         borrowedMovies[j] = borrowedMovies[j + 1];
@@ -83,6 +87,18 @@ namespace DVDLibraryManager
         public override string ToString()
         {
             return $"Name: {FirstName} {LastName}, Phone: {PhoneNumber}, Borrowed Movies Count: {borrowedCount}";
+        }
+
+        private void ValidateInput(string firstName, string lastName, string phoneNumber, string password)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new ArgumentException("First name cannot be empty.");
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("Last name cannot be empty.");
+            if (string.IsNullOrWhiteSpace(phoneNumber) || phoneNumber.Length < 10)
+                throw new ArgumentException("Phone number is invalid.");
+            if (string.IsNullOrWhiteSpace(password) || password.Length != 4 || !password.All(char.IsDigit))
+                throw new ArgumentException("Password must be a 4-digit number.");
         }
     }
 }
