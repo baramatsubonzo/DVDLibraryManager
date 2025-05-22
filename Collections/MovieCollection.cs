@@ -26,17 +26,15 @@ namespace DVDLibraryManager
             movieCount = 0;
         }
 
-        // TODO: Check later if this hash function matches the lecture
+        // Division method
         private int HashFunction(string title)
         {
-            int hash = 0;
+            int num = 0;
             foreach (char c in title)
-            {
-                hash = (hash * 31 + c) % table.Length;
-            }
-            return hash;
+                // In C#, adding a char to an int automatically converts the char to its ASCII (Unicode) code.
+                num += c;
+            return num % table.Length;
         }
-
         // Find an available bucket with linear probing
         private int FindBucket(string title)
         {
