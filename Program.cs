@@ -58,8 +58,8 @@ class Program
         movieCollection.AddMovie(new Movie("Inception", Genre.SciFi, Classification.M15Plus, 90, 3, 3));
 
         // Register Member
-        memberCollection.AddMember(new Member("Test", "User1", "000111222", "0000"));
-        memberCollection.AddMember(new Member("Test", "User2", "000111333", "0000"));
+        memberCollection.AddMember(new Member("Test", "User1", "0123456789", "0000"));
+        memberCollection.AddMember(new Member("Test", "User2", "1234567890", "0000"));
         memberCollection.AddMember(new Member("hoge", "hoge", "0000000000", "0000"));
     }
 
