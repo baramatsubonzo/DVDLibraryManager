@@ -7,7 +7,7 @@ namespace DVDLibraryManager
     {
         private MovieCollection movieCollection;
         private MemberCollection memberCollection;
-        
+
         public StaffHandler(MovieCollection movieCollection, MemberCollection memberCollection)
         {
             this.movieCollection = movieCollection;
@@ -76,12 +76,19 @@ namespace DVDLibraryManager
             int total_copies = EnterValidCopies();
             int available_copies = total_copies;
 
-            Movie newMovie = new Movie(title, genre, classification, duration, available_copies, total_copies);
-            movieCollection.AddMovie(newMovie);
+            try
+            {
+              Movie newMovie = new Movie(title, genre, classification, duration, available_copies, total_copies);
+              movieCollection.AddMovie(newMovie);
+              Console.WriteLine("Movie added successfully!");
+              Console.WriteLine("=== Current Movies in Collection ===");
+              movieCollection.GetAllMovies();
+            }
+            catch (ArgumentException e)
+            {
+              Console.WriteLine($"Failed to add movie: {e.Message}");
+            }
 
-            Console.WriteLine("Movie added successfully!");
-            Console.WriteLine("=== Current Movies in Collection ===");
-            movieCollection.GetAllMovies();
         }
 
         private void HandleRemoveMovie()
@@ -111,19 +118,28 @@ namespace DVDLibraryManager
           string phoneNumber = EnterValidPhoneNumber();
           string password = EnterValidPassword();
 
-          Member newMember = new Member(firstName, lastName, phoneNumber, password);
+        try
+        {
+            Member newMember = new Member(firstName, lastName, phoneNumber, password);
 
-          bool added = memberCollection.AddMember(newMember);
+            bool added = memberCollection.AddMember(newMember);
 
-          if (added)
-          {
-            Console.WriteLine("Member registered successfully!");
-          }
-          else
-          {
-            Console.WriteLine("Member already exists or collection is full.");
-          }
+            if (added)
+            {
+              Console.WriteLine("Member registered successfully!");
+            }
+            else
+            {
+              Console.WriteLine("Member already exists or collection is full.");
+            }
+        }
+
+        catch (ArgumentException e)
+        {
+          Console.WriteLine($"Failed to register member: {e.Message}");
+        }
           // Show the member
+          Console.WriteLine("=== Current Members ===");
           memberCollection.ListAllMembers();
         }
 
