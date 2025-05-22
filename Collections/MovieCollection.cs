@@ -60,7 +60,6 @@ namespace DVDLibraryManager
             int originalHash = hash;
             do
             {
-                // Todo: Collision Check later
                 if (table[hash].State == BucketState.Empty || table[hash].State == BucketState.Deleted)
                     return hash;
                 if (table[hash].State == BucketState.Occupied && table[hash].Key == title)
