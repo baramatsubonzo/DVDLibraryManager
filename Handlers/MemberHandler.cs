@@ -39,7 +39,7 @@ namespace DVDLibraryManager
                         HandleReturnMovie(loggedInMember);
                         break;
                     case "5":
-                        HandleListBorrowedMoviews(loggedInMember);
+                        HandleListBorrowedMovies(loggedInMember);
                         break;
                     case "6":
                         HandleDisplayTop3Movies();
@@ -146,7 +146,7 @@ namespace DVDLibraryManager
                 }
             }
         }
-        private void HandleListBorrowedMoviews(Member loggedInMember)
+        private void HandleListBorrowedMovies(Member loggedInMember)
         {
             Console.WriteLine("List current borrowing movies selected.");
             Console.WriteLine("=== List Your Borrowed Movies ===");
