@@ -75,7 +75,16 @@ namespace DVDLibraryManager
             AvailableCopies += copies;
             TotalCopies += copies;
         }
-        // public RemoveCopies(int copies)
+
+        public bool RemoveCopies(int copies)
+        {
+            if (copies > AvailableCopies)
+                return false;
+
+            AvailableCopies -= copies;
+            TotalCopies -= copies;
+            return true;
+        }
 
         // Method to display information
         public override string ToString()
