@@ -105,20 +105,32 @@ namespace DVDLibraryManager
             return null;
         }
 
-        // Delete a movie. Set the Delete flag.
-        public bool RemoveMovie(string title)
+        // If all copies are removed, mark the bucket as Deleted.
+        public bool RemoveMovieCopies(string title, int count, out bool fullyRemoved)
         {
+            fullyRemoved = false;
             int bucket = FindBucket(title);
 
-            if (bucket != -1 && table[bucket].State == BucketState.Occupied)
+            if (bucket == -1 || table[bucket].State != BucketState.Occupied)
+                return false;
+
+            Movie movie = table[bucket].Value;
+
+            if (count > movie.AvailableCopies)
+                return false;
+
+            movie.RemoveCopies(count);
+
+            if (movie.TotalCopies == 0)
             {
                 table[bucket].Key = null;
                 table[bucket].Value = null;
                 table[bucket].State = BucketState.Deleted;
                 movieCount--;
-                return true;
+                fullyRemoved = true;
             }
-            return false;
+
+            return true;
         }
 
         // Returns all movies stored in the collection, alphabetically by title.

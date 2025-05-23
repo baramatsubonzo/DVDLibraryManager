@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 
 namespace DVDLibraryManager
 {
@@ -93,54 +92,71 @@ namespace DVDLibraryManager
 
         private void HandleRemoveMovie()
         {
-          Console.WriteLine("Remove DVDs from system selected.");
-          Console.Write("Enter movie title to remove: ");
-          string titleToRemove = Console.ReadLine();
+            Console.WriteLine("Remove DVDs from system selected.");
+            Console.Write("Enter movie title to remove: ");
+            string titleToRemove = Console.ReadLine();
 
-          bool isMovieRemoved = movieCollection.RemoveMovie(titleToRemove);
-
-          if (isMovieRemoved)
-          {
-            Console.WriteLine("Movie removed successfully!");
-          }
-          else
-          {
-            Console.WriteLine("Movie not found or could not be removed.");
-          }
-        }
-
-        private void HandleRegisterMember()
-        {
-          Console.WriteLine("Register a new member selected.");
-
-          string firstName = EnterValidFirstName();
-          string lastName = EnterValidLastName();
-          string phoneNumber = EnterValidPhoneNumber();
-          string password = EnterValidPassword();
-
-        try
-        {
-            Member newMember = new Member(firstName, lastName, phoneNumber, password);
-
-            bool added = memberCollection.AddMember(newMember);
-
-            if (added)
+            Movie targetMovie = movieCollection.FindMovie(titleToRemove);
+            if (targetMovie == null)
             {
-              Console.WriteLine("Member registered successfully!");
+                Console.WriteLine("Movie not found.");
+                return;
+            }
+
+            Console.Write($"Enter number of copies to remove (Available: {targetMovie.AvailableCopies}): ");
+            if (!int.TryParse(Console.ReadLine(), out int countToRemove) || countToRemove <= 0)
+            {
+                Console.WriteLine("Invalid number of copies.");
+                return;
+            }
+
+            bool success = movieCollection.RemoveMovieCopies(titleToRemove, countToRemove, out bool fullyRemoved);
+            if (!success)
+            {
+                Console.WriteLine("Failed to remove: either movie not found or insufficient available copies.");
+            }
+            else if (fullyRemoved)
+            {
+                Console.WriteLine("All copies removed. Movie has been deleted from the system.");
             }
             else
             {
-              Console.WriteLine("Member already exists or collection is full.");
+                Console.WriteLine($"{countToRemove} copies removed successfully.");
             }
         }
 
-        catch (ArgumentException e)
+    private void HandleRegisterMember()
+    {
+      Console.WriteLine("Register a new member selected.");
+
+      string firstName = EnterValidFirstName();
+      string lastName = EnterValidLastName();
+      string phoneNumber = EnterValidPhoneNumber();
+      string password = EnterValidPassword();
+
+      try
+      {
+        Member newMember = new Member(firstName, lastName, phoneNumber, password);
+
+        bool added = memberCollection.AddMember(newMember);
+
+        if (added)
         {
-          Console.WriteLine($"Failed to register member: {e.Message}");
+          Console.WriteLine("Member registered successfully!");
         }
-          // Show the member
-          memberCollection.ListAllMembers();
+        else
+        {
+          Console.WriteLine("Member already exists or collection is full.");
         }
+      }
+
+      catch (ArgumentException e)
+      {
+        Console.WriteLine($"Failed to register member: {e.Message}");
+      }
+      // Show the member
+      memberCollection.ListAllMembers();
+    }
 
         private void HandleRemoveMember()
         {
